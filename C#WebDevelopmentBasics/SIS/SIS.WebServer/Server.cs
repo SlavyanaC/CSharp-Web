@@ -1,11 +1,9 @@
 ﻿namespace SIS.WebServer
 {
-    using SIS.WebServer.Routing;
+    using Routing;
     using System;
-    using System.Collections.Generic;
     using System.Net;
     using System.Net.Sockets;
-    using System.Text;
     using System.Threading.Tasks;
 
     public class Server
@@ -42,7 +40,7 @@
             {
                 var client = await this.listener.AcceptSocketAsync();
                 var connectionHandler = new ConnectionHandler(client, this.serverRoutingTable);
-                var responseTask = connectionHandler.ProccessRequestAsync();
+                var responseTask = connectionHandler.ProcessRequestAsync();
                 responseTask.Wait();
             }
         }

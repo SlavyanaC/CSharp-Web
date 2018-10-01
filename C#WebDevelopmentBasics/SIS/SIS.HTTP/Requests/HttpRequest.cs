@@ -6,8 +6,11 @@
     using Enums;
     using Headers.Contracts;
     using Headers;
-    using Requests.Contrcts;
+    using Contracts;
     using Exceptions;
+    using Cookies;
+    using Cookies.Contracts;
+    using Sessions.Contracts;
 
     public class HttpRequest : IHttpRequest
     {
@@ -16,11 +19,12 @@
             this.FormData = new Dictionary<string, object>();
             this.QueryData = new Dictionary<string, object>();
             this.Headers = new HttpHeaderCollection();
+            this.Cookies = new HttpCookieCollection();
 
             this.ParseRequest(requestString);
         }
 
-        public string Paht { get; private set; }
+        public string Path { get; private set; }
 
         public string Url { get; private set; }
 
@@ -29,6 +33,10 @@
         public Dictionary<string, object> QueryData { get; }
 
         public IHttpHeaderCollection Headers { get; }
+
+        public IHttpCookieCollection Cookies { get; }
+
+        public IHttpSession Session { get; set; }
 
         public HttpRequestMethod RequestMethod { get; private set; }
 
@@ -47,6 +55,7 @@
             this.ParseRequestPath();
 
             this.ParseHeaders(splitRequestContent.Skip(1).ToArray());
+            this.ParseCookies();
             this.ParseRequestParameters(splitRequestContent.Last());
         }
 
@@ -68,7 +77,7 @@
         private void ParseRequestPath()
         {
             string path = this.Url.Split('?', '#', StringSplitOptions.RemoveEmptyEntries)[0];
-            this.Paht = path;
+            this.Path = path;
         }
 
         private void ParseHeaders(string[] requestContent)
@@ -91,6 +100,36 @@
                 {
                     throw new BadRequestException();
                 }
+            }
+        }
+
+        private void ParseCookies()
+        {
+            if (!this.Headers.ContainsHeader("Cookie"))
+            {
+                return;
+            }
+
+            string cookiesString = this.Headers.GetHeader("Cookie").Value;
+            if (string.IsNullOrWhiteSpace(cookiesString))
+            {
+                return;
+            }
+
+            string[] splitCookies = cookiesString.Split("; ");
+            foreach (var splitCookie in splitCookies)
+            {
+                string[] cookieParts = splitCookie.Split('=', 2);
+                if (cookieParts.Length != 2)
+                {
+                    continue; ;
+                }
+
+                string key = cookieParts[0];
+                string value = cookieParts[1];
+
+                HttpCookie cookie = new HttpCookie(key, value, false);
+                this.Cookies.Add(cookie);
             }
         }
 
