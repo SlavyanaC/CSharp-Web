@@ -5,11 +5,13 @@
     using System.Text;
     using System.Threading.Tasks;
     using HTTP.Requests;
-    using HTTP.Requests.Contrcts;
+    using HTTP.Requests.Contracts;
     using HTTP.Responses.Contracts;
     using HTTP.Enums;
     using HTTP.Responses;
     using Routing;
+    using HTTP.Cookies;
+    using HTTP.Sessions;
 
     public class ConnectionHandler
     {
@@ -22,13 +24,18 @@
             this.serverRoutingTable = serverRoutingTable;
         }
 
-        public async Task ProccessRequestAsync()
+        public async Task ProcessRequestAsync()
         {
             var httpRequest = await this.ReadRequest();
 
             if (httpRequest != null)
             {
+                string sessionId = this.SetRequestSession(httpRequest);
+
                 var httpResponse = this.HandleRequest(httpRequest);
+
+                this.SetResponseSession(httpResponse, sessionId);
+
                 await this.PrepareResponse(httpResponse);
             }
 
@@ -68,12 +75,12 @@
 
         private IHttpResponse HandleRequest(IHttpRequest httpRequest)
         {
-            if (!this.serverRoutingTable.Routes.ContainsKey(httpRequest.RequestMethod) || !this.serverRoutingTable.Routes[httpRequest.RequestMethod].ContainsKey(httpRequest.Paht))
+            if (!this.serverRoutingTable.Routes.ContainsKey(httpRequest.RequestMethod) || !this.serverRoutingTable.Routes[httpRequest.RequestMethod].ContainsKey(httpRequest.Path))
             {
                 return new HttpResponse(HttpResponseStatusCode.NotFound);
             }
 
-            return this.serverRoutingTable.Routes[httpRequest.RequestMethod][httpRequest.Paht].Invoke(httpRequest);
+            return this.serverRoutingTable.Routes[httpRequest.RequestMethod][httpRequest.Path].Invoke(httpRequest);
         }
 
         private async Task PrepareResponse(IHttpResponse httpResponse)
@@ -81,6 +88,37 @@
             byte[] byteSegments = httpResponse.GetBytes();
 
             await this.client.SendAsync(byteSegments, SocketFlags.None);
+        }
+
+        private string SetRequestSession(IHttpRequest httpRequest)
+        {
+            string sessionId = null;
+
+            if (httpRequest.Cookies.ContainsCookie(HttpSessionStorage.SessionCookieKey))
+            {
+                var cookie = httpRequest.Cookies.GetCookie(HttpSessionStorage.SessionCookieKey);
+                sessionId = cookie.Value;
+                httpRequest.Session = HttpSessionStorage.GetSession(sessionId);
+            }
+            else
+            {
+                sessionId = Guid.NewGuid().ToString();
+                httpRequest.Session = HttpSessionStorage.GetSession(sessionId);
+            }
+
+            return sessionId;
+        }
+
+        private void SetResponseSession(IHttpResponse httpResponse, string sessionId)
+        {
+            if (sessionId == null)
+            {
+                return;
+            }
+
+            HttpCookie cookie = new HttpCookie(HttpSessionStorage.SessionCookieKey, $"{sessionId};HttpOnly=true");
+
+            httpResponse.AddCookie(cookie);
         }
     }
 }
