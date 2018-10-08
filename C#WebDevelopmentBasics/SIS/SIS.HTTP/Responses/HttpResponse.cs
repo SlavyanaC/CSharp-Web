@@ -14,13 +14,10 @@
 
     public class HttpResponse : IHttpResponse
     {
-        public HttpResponse()
-        {
-        }
+        public HttpResponse() { }
 
         public HttpResponse(HttpResponseStatusCode statusCode)
         {
-            // TODO: CoreValidator.ThrowIfNullOrWhitespace?
             CoreValidator.ThrowIfNull(statusCode, nameof(statusCode));
 
             this.Headers = new HttpHeaderCollection();
@@ -64,8 +61,6 @@
 
             if (this.Cookies.HasCookies())
             {
-                //result.Append($"Set-Cookie: {this.Cookies}")
-                //    .Append(Environment.NewLine);
                 foreach (var httpCookie in this.Cookies)
                 {
                     result.Append($"Set-Cookie: {httpCookie}").Append(Environment.NewLine);
