@@ -1,8 +1,8 @@
-﻿using SIS.HTTP.Common;
-
-namespace SIS.WebServer
+﻿namespace SIS.WebServer
 {
     using System;
+    using System.IO;
+    using System.Linq;
     using System.Net.Sockets;
     using System.Text;
     using System.Threading.Tasks;
@@ -12,6 +12,7 @@ namespace SIS.WebServer
     using HTTP.Enums;
     using HTTP.Responses;
     using HTTP.Cookies;
+    using HTTP.Common;
     using HTTP.Sessions;
     using HTTP.Exceptions;
     using Routing;
@@ -19,6 +20,9 @@ namespace SIS.WebServer
 
     public class ConnectionHandler
     {
+        private const string RESOURCES_DIRECTORY_RELATIVE_PATH = "../../../Resources/";
+
+        private readonly string[] resoureExtentions = { "css", "js" };
         private readonly Socket client;
         private readonly ServerRoutingTable serverRoutingTable;
 
@@ -60,20 +64,6 @@ namespace SIS.WebServer
             }
 
             this.client.Shutdown(SocketShutdown.Both);
-            //var httpRequest = await this.ReadRequest();
-
-            //if (httpRequest != null)
-            //{
-            //    string sessionId = this.SetRequestSession(httpRequest);
-
-            //    var httpResponse = this.HandleRequest(httpRequest);
-
-            //    this.SetResponseSession(httpResponse, sessionId);
-
-            //    await this.PrepareResponse(httpResponse);
-            //}
-
-            //this.client.Shutdown(SocketShutdown.Both);
         }
 
         private async Task<IHttpRequest> ReadRequest()
@@ -111,10 +101,32 @@ namespace SIS.WebServer
         {
             if (!this.serverRoutingTable.Routes.ContainsKey(httpRequest.RequestMethod) || !this.serverRoutingTable.Routes[httpRequest.RequestMethod].ContainsKey(httpRequest.Path))
             {
-                return new HttpResponse(HttpResponseStatusCode.NotFound);
+                return this.ReturnIfResource(httpRequest.Path);
             }
 
             return this.serverRoutingTable.Routes[httpRequest.RequestMethod][httpRequest.Path].Invoke(httpRequest);
+        }
+
+        private IHttpResponse ReturnIfResource(string httpRequestPath)
+        {
+            var fileExtension = httpRequestPath.Substring(httpRequestPath.LastIndexOf('.') + 1);
+
+            if (!resoureExtentions.Contains(fileExtension))
+            {
+                return new HttpResponse(HttpResponseStatusCode.NotFound);
+            }
+
+            var pathToSearch = RESOURCES_DIRECTORY_RELATIVE_PATH +
+                               fileExtension +
+                               httpRequestPath;
+
+            if (!File.Exists(pathToSearch))
+            {
+                return new HttpResponse(HttpResponseStatusCode.NotFound);
+            }
+
+            var fileBytes = File.ReadAllBytes(pathToSearch);
+            return new InlineResourceResult(fileBytes, HttpResponseStatusCode.Ok);
         }
 
         private async Task PrepareResponse(IHttpResponse httpResponse)

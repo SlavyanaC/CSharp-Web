@@ -34,9 +34,6 @@
                 var client = listener.AcceptSocketAsync().GetAwaiter().GetResult();
                 Task.Run(() => this.ListenLoop(client));
             }
-
-            //var task = Task.Run(this.ListenLoop);
-            //task.Wait();
         }
 
         public async Task ListenLoop(Socket client)
@@ -44,16 +41,5 @@
             var connectionHandler = new ConnectionHandler(client, this.serverRoutingTable);
             await connectionHandler.ProcessRequestAsync();
         }
-
-        //public async Task ListenLoop()
-        //{
-        //    while (this.isRunning)
-        //    {
-        //        var client = await this.listener.AcceptSocketAsync();
-        //        var connectionHandler = new ConnectionHandler(client, this.serverRoutingTable);
-        //        var responseTask = connectionHandler.ProcessRequestAsync();
-        //        responseTask.Wait();
-        //    }
-        //}
     }
 }
