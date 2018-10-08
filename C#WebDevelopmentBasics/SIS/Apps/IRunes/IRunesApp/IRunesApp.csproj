@@ -10,4 +10,9 @@
     <ProjectReference Include="..\IRunesData\IRunesData.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Resources\css\" />
+    <Folder Include="Resources\js\" />
+  </ItemGroup>
+
 </Project>
