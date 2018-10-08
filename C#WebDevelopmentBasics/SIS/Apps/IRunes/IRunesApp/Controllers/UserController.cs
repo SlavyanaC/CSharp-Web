@@ -18,7 +18,15 @@
             this.hashService = new HashService();
         }
 
-        public IHttpResponse Login(IHttpRequest request) => this.View();
+        public IHttpResponse Login(IHttpRequest request)
+        {
+            if (this.IsAuthenticated(request))
+            {
+                return new RedirectResult("/");
+            }
+
+            return this.View();
+        }
 
         public IHttpResponse PostLogin(IHttpRequest request)
         {
@@ -26,6 +34,11 @@
             var password = request.FormData["password"].ToString();
             var passwordHash = this.hashService.Hash(password);
             var user = this.Db.Users.FirstOrDefault(u => (u.Username == usernameOrEmail || u.Email == usernameOrEmail) && u.HashedPassword == passwordHash);
+
+            if (this.IsAuthenticated(request))
+            {
+                return new RedirectResult("/");
+            }
 
             if (user == null)
             {
@@ -43,7 +56,15 @@
             return response;
         }
 
-        public IHttpResponse Register(IHttpRequest request) => this.View();
+        public IHttpResponse Register(IHttpRequest request)
+        {
+            if (this.IsAuthenticated(request))
+            {
+                return new RedirectResult("/");
+            }
+
+            return this.View();
+        }
 
         public IHttpResponse PostRegister(IHttpRequest request)
         {
@@ -51,6 +72,11 @@
             var password = request.FormData["password"].ToString();
             var confirmPassword = request.FormData["confirmPassword"].ToString();
             var email = request.FormData["email"].ToString();
+
+            if (this.IsAuthenticated(request))
+            {
+                return new RedirectResult("/");
+            }
 
             var tupleInvalidFormAndMessage = this.ValidateRegistrationData(username, password, confirmPassword);
             if (tupleInvalidFormAndMessage.Item1)
