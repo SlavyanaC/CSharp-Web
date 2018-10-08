@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Album Details</title>
+</head>
+<body>
+    <h1>IRunes</h1>
+    <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/Users/Login">Login</a></li>
+        <li><a href="/Users/Register">Register</a></li>
+    </ul>
+    <hr />
+    @albumData
+    <h2>Tracks</h2>
+    <hr />
+    <a href="/Tracks/Create?albumId=@albumId">Create Track</a>
+    <hr />
+    @tracksData
+    <hr />
+    <a href="/Albums/All">Back To All</a>
+    <hr />
+    <footer>
+        <p><strong>Copyright &#169 Sanity Design Studios. All rights reserved</strong></p>
+    </footer>
+</body>
+</html>

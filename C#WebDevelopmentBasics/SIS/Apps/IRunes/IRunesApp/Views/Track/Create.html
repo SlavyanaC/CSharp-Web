@@ -1,0 +1,9 @@
+﻿<h1>Create Track</h1>
+<form method="post" action="/Tracks/Create?albumId=@albumId">
+    Name <input type="text" name="name" placeholder="Name..." /><br />
+    Link <input type="text" name="link" placeholder="Link..." /><br />
+    Price <input type="price" name="price" placeholder="Price..." /><br />
+    <input type="submit" value="Create" />
+</form>
+<hr />
+<a href="/Albums/Details?id=@albumId">Back To Album</a>
