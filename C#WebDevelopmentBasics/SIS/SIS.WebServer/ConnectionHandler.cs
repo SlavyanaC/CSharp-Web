@@ -110,6 +110,7 @@
         private IHttpResponse ReturnIfResource(string httpRequestPath)
         {
             var fileExtension = httpRequestPath.Substring(httpRequestPath.LastIndexOf('.') + 1);
+            var resourcePath = httpRequestPath.Substring(httpRequestPath.LastIndexOf('/'));
 
             if (!resoureExtentions.Contains(fileExtension))
             {
@@ -118,7 +119,7 @@
 
             var pathToSearch = RESOURCES_DIRECTORY_RELATIVE_PATH +
                                fileExtension +
-                               httpRequestPath;
+                               resourcePath;
 
             if (!File.Exists(pathToSearch))
             {

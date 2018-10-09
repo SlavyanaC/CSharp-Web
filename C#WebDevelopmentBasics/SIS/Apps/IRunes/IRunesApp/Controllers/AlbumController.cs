@@ -31,6 +31,11 @@
             var name = request.FormData["name"].ToString();
             var cover = request.FormData["cover"].ToString();
 
+            if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(cover))
+            {
+                return new RedirectResult("/Albums/Create");
+            }
+
             try
             {
                 AddAlbumToDb(name, cover, request);
@@ -57,7 +62,8 @@
             {
                 foreach (var album in albums)
                 {
-                    var albumHtml = $@"<a href =""/Albums/Details?id={album.Id}"">{album.Name}</a></li><br/>";
+                    var albumHtml =
+                        $@"<strong><li class""list-group-item""><a class=""list-group-item list-group-item-action text-primary"" href =""/Albums/Details?id={album.Id}"">{album.Name}</a></li></strong>";
                     listOfAlbums += albumHtml;
                 }
 
@@ -85,15 +91,15 @@
 
             var albumData = new StringBuilder();
 
-            albumData.Append($@"<img src=""{albumCover}"" height=""250"" width=""250""/></ br>");
-            albumData.Append($@"<h2>Name: {album.Name}</h2></ br>");
-            albumData.Append($@"<h2>Price: {album.Price:F2}&#36</h2></ br>");
+            albumData.Append($@"<img src=""{albumCover}"" style=""height: 300px; width: 600px"" class=""img-thumbnail""></ br>");
+            albumData.Append($@"<h2 class=""text-center"">Name: {album.Name}</h2></ br>");
+            albumData.Append($@"<h2 class=""text-center"">Price: ${album.Price:F2}</h2></ br>");
 
             var tracksData = new StringBuilder();
 
             if (!album.TrackAlbums.Any())
             {
-                tracksData.Append("<p>No tracks in the album</p>");
+                tracksData.Append(@"<p class=""text-muted""><strong>No tracks in the album</strong></p>");
             }
 
             else
@@ -101,7 +107,7 @@
                 tracksData.Append("<ol>");
                 foreach (var trackAlbum in album.TrackAlbums)
                 {
-                    tracksData.Append($@"<li><a href=""/Tracks/Details?albumId={album.Id}&trackId={trackAlbum.Track.Id}"">{trackAlbum.Track.Name}</a></ li>");
+                    tracksData.Append($@"<em><li><a class=""text-primary"" href=""/Tracks/Details?albumId={album.Id}&trackId={trackAlbum.Track.Id}"">{trackAlbum.Track.Name}</a></li><em>");
                 }
 
                 tracksData.Append("</ol>");

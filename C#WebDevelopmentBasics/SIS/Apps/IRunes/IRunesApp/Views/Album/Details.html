@@ -1,8 +1,14 @@
-﻿    @albumData
-<h2>Tracks</h2>
-<hr />
-<a href="/Tracks/Create?albumId=@albumId">Create Track</a>
-<hr />
-    @tracksData
-<hr />
-<a href="/Albums/All">Back To All</a>
+﻿<div class="form-row">
+    <div class="col-md-4 text-left">
+        @albumData
+        <div class="d-flex justify-content-between">
+            <button type="button" onclick="location.href = '/Tracks/Create?albumId=@albumId'" class="text-left btn btn-success">Create Track</button>
+            <button type="button" onclick="location.href = '/Albums/All'" class="text-right btn btn-success">Back To All</button>
+        </div>
+    </div>
+    <div class="col-md-1"></div>
+    <div class="col-md-6">
+        <h2><b>Tracks</b></h2>
+        @tracksData
+    </div>
+</div>

@@ -1,3 +1,11 @@
-﻿    @trackData
-<hr />
-<a href="/Albums/Details?id=@albumId">Back To Album</a>
+﻿<div class="container w-50">
+    <div class="text-center">
+        @trackData
+        <hr class="my-2" style="border-color: #228B22; border-top-width: 2px;">
+        <div class="embed-responsive embed-responsive-16by9">
+            @trackLink
+        </div>
+        <hr class="my-2" style="border-color: #228B22; padding-bottom: 8px; border-top-width: 2px;">
+        <button type="button" onclick="location.href = '/Albums/Details?id=@albumId'" class="text-center btn btn-success">Back To Album</button>
+    </div>
+</div>

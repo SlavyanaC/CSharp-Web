@@ -1,6 +1,15 @@
-﻿<h1>Login</h1>
-<form method="post" action="/Users/Login">
-    Username/Email <input type="text" name="username" placeholder="Username or Email" /><br />
-    Password <input type="password" name="password" placeholder="Password" /><br />
-    <input type="submit" value="Login" />
-</form>
+﻿<div class="container w-50">
+    <h2 class="display-7 text-center align-content-center text-success">Login</h2>
+    <hr class="my-1" style="border-color: green; border-top-width: 2px; padding-bottom: 2px; padding-left: 2px" />
+    <form method="post" action="/Users/Login" class="align-text-top">
+        <div class="form-group align-self-center">
+            <label>Username/Email</label>
+            <input type="text" name="username" class="form-control" placeholder="Username/Email...">
+        </div>
+        <div class="form-group align-content-center">
+            <label>Password</label>
+            <input type="password" name="password" class="form-control" placeholder="Password...">
+        </div>
+        <button type="submit" class="btn btn-success">Login</button>
+    </form>
+</div>

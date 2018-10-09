@@ -1,9 +1,26 @@
-﻿<h1>Create Track</h1>
-<form method="post" action="/Tracks/Create?albumId=@albumId">
-    Name <input type="text" name="name" placeholder="Name..." /><br />
-    Link <input type="text" name="link" placeholder="Link..." /><br />
-    Price <input type="price" name="price" placeholder="Price..." /><br />
-    <input type="submit" value="Create" />
-</form>
-<hr />
-<a href="/Albums/Details?id=@albumId">Back To Album</a>
+﻿<div class="container w-50">
+    <h2 class="display-7 text-center align-content-center text-success">Create Track</h2>
+    <hr class="my-1" style="border-color: green; border-top-width: 2px; padding-bottom: 2px; padding-left: 2px" />
+    <form method="post" action="/Tracks/Create?albumId=@albumId" class="align-text-top">
+        <div class="form-group align-self-center">
+            <label>Name</label>
+            <input type="text" name="name" class="form-control" placeholder="Name...">
+        </div>
+        <div class="form-row">
+            <div class="col-md-6 text-left">
+                <label>Link</label><br />
+                <input type="text" name="link" class="form-control" placeholder="Link...">
+            </div>
+            <div class="col-md-6 text-left">
+                <label>Price</label><br />
+                <input type="text" name="price" class="form-control" placeholder="Price...">
+            </div>
+        </div>
+        <br />
+        <hr class="my-1" style="border-color: green; border-top-width: 2px; padding-bottom: 2px; padding-left: 2px" /><br />
+        <div class="d-flex justify-content-around">
+            <button type="submit" class="text-left btn btn-success">Create</button>
+            <button type="button" onclick="location.href = '/Albums/Details?id=@albumId'" class="text-right btn btn-success">Back To Album</button>
+        </div>
+    </form>
+</div>

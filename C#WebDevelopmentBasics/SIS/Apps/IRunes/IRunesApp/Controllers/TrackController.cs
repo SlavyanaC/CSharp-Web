@@ -67,13 +67,20 @@
             var track = this.Db.Tracks.FirstOrDefault(t => t.Id == trackId);
             var trackLink = HttpUtility.UrlDecode(track.Link);
 
+            if (trackLink.Contains("watch?v="))
+            {
+                trackLink = trackLink.Replace("watch?v=", "embed/");
+            }
+
             var trackData = new StringBuilder();
 
-            trackData.Append($@"<iframe src=""{trackLink}""></iframe>");
-            trackData.Append($@"<h2>Name: {track.Name}</h2></ br>");
-            trackData.Append($@"<h2>Price: {track.Price:F2}&#36</h2></ br>");
+            trackData.Append($@"<h3 class=""text-center"">Track Name: {track.Name}</h3></ br>");
+            trackData.Append($@"<h3 class=""text-center"">Track Price: ${track.Price:F2}</h3>");
+
+            var trackInfo = $@"<iframe class=""embed-responsive-item"" src=""{trackLink}"" allowfullscreen></iframe>";
 
             this.ViewBag["trackData"] = trackData.ToString();
+            this.ViewBag["trackLink"] = trackInfo;
             this.ViewBag["albumId"] = albumId;
 
             return this.View("Details");

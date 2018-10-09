@@ -1,8 +1,23 @@
-﻿<h1>Register</h1>
-<form method="post" action="/Users/Register">
-    Username <input type="text" name="username" placeholder="Username..." /><br />
-    Password <input type="password" name="password" placeholder="Password..." /><br />
-    Confirm Password <input type="password" name="confirmPassword" placeholder="Confirm Password..." /><br />
-    Email <input type="email" name="email" placeholder="Email..." /><br />
-    <input type="submit" value="Register" />
-</form>
+﻿<div class="container w-50">
+    <h2 class="display-7 text-center align-content-center text-success">Register</h2>
+    <hr class="my-1" style="border-color: green; border-top-width: 2px; padding-bottom: 2px; padding-left: 2px" />
+    <form method="post" action="/Users/Register" class="align-text-top">
+        <div class="form-group align-self-center">
+            <label>Username</label>
+            <input type="text" name="username" class="form-control" placeholder="Username...">
+        </div>
+        <div class="form-group align-self-center">
+            <label>Password</label>
+            <input type="password" name="password" class="form-control" placeholder="Password...">
+        </div>
+        <div class="form-group align-self-center">
+            <label>Confirm password</label>
+            <input type="password" name="confirmPassword" class="form-control" placeholder="Confirm password...">
+        </div>
+        <div class="form-group align-content-center">
+            <label>Email</label>
+            <input type="email" name="email" class="form-control" placeholder="Email...">
+        </div>
+        <button type="submit" class="btn btn-success">Login</button>
+    </form>
+</div>

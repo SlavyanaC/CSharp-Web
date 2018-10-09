@@ -4,20 +4,30 @@
 <head>
     <meta charset="utf-8" />
     <title>IRunes</title>
+    <link rel="stylesheet" href="bootstrap.min.css" />
 </head>
 <body>
-    <h1>IRunes</h1>
-    <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="/Users/Login">Login</a></li>
-        <li><a href="/Users/Register">Register</a></li>
-        <li><a href="/Users/Logout">Logout</a></li>
-    </ul>
-    <hr />
+    <nav class="navbar navbar-expand-lg navbar-light bg-success">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <a class="navbar-brand text-white" href="/">IRunes</a>
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                <li class="nav-item"> <a class="nav-link text-white" href="/">Home</a></li>
+                <li class="nav-item"> <a class="nav-link text-white" href="/Albums/All">Albums</a></li>
+                <li class="nav-item"> <a class="nav-link text-white" href="/Users/Logout">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+    <hr style="height: 2px" class="bg-success" />
     @contentBody
-    <hr />
+    <hr style="height: 2px" class="bg-success" />
     <footer>
-        <p><strong>Copyright &#169 Sanity Design Studios. All rights reserved</strong></p>
+        <p align="center"><strong>Copyright &#169 Sanity Design Studios. All rights reserved</strong></p>
     </footer>
+    <script src="jquery-3.3.1.min.js"></script>
+    <script src="popper.min.js"></script>
+    <script src="bootstrap.min.js"></script>
 </body>
 </html>
