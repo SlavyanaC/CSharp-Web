@@ -63,7 +63,7 @@
                 foreach (var album in albums)
                 {
                     var albumHtml =
-                        $@"<strong><li class""list-group-item""><a class=""list-group-item list-group-item-action text-primary"" href =""/Albums/Details?id={album.Id}"">{album.Name}</a></li></strong>";
+                        $@"<strong><li class=""list-group-item""><a class=""list-group-item list-group-item-action text-primary"" href =""/Albums/Details?id={album.Id}"">{album.Name}</a></li></strong>";
                     listOfAlbums += albumHtml;
                 }
 
