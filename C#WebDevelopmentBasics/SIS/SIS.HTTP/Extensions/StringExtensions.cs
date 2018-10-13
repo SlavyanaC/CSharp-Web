@@ -2,7 +2,19 @@
 {
     public static class StringExtensions
     {
-        // TODO: Make this smarter!
-        public static string Capitalize(string input) => input[0].ToString().ToUpper() + input.Substring(1);
+        public static string Capitalize(this string text)
+        {
+            if (string.IsNullOrEmpty(text))
+            {
+                return text;
+            }
+
+            if (text.Length == 1)
+            {
+                return text.ToUpper();
+            }
+
+            return char.ToUpper(text[0]) + text.Substring(1).ToLower();
+        }
     }
 }

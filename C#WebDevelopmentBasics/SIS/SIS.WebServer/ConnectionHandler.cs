@@ -17,21 +17,32 @@
     using HTTP.Exceptions;
     using Routing;
     using Results;
+    using Api.Contracts;
 
     public class ConnectionHandler
     {
-        private const string RESOURCES_DIRECTORY_RELATIVE_PATH = "../../../Resources/";
+        //private const string RESOURCES_DIRECTORY_RELATIVE_PATH = "../../../Resources/";
 
-        private readonly string[] resoureExtentions = { "css", "js" };
+        //private readonly string[] resoureExtentions = { "css", "js" };
         private readonly Socket client;
-        private readonly ServerRoutingTable serverRoutingTable;
+        //private readonly ServerRoutingTable serverRoutingTable;
+        private readonly IHttpHandler handler;
 
-        public ConnectionHandler(Socket client, ServerRoutingTable serverRoutingTable)
+        //public ConnectionHandler(Socket client, ServerRoutingTable serverRoutingTable)
+        //{
+        //    CoreValidator.ThrowIfNull(client, nameof(client));
+        //    CoreValidator.ThrowIfNull(serverRoutingTable, nameof(serverRoutingTable));
+        //    this.client = client;
+        //    this.serverRoutingTable = serverRoutingTable;
+        //}
+
+        public ConnectionHandler(Socket client, IHttpHandler handler)
         {
             CoreValidator.ThrowIfNull(client, nameof(client));
-            CoreValidator.ThrowIfNull(serverRoutingTable, nameof(serverRoutingTable));
+            CoreValidator.ThrowIfNull(handler, nameof(handler));
+
             this.client = client;
-            this.serverRoutingTable = serverRoutingTable;
+            this.handler = handler;
         }
 
         public async Task ProcessRequestAsync()
@@ -42,13 +53,8 @@
 
                 if (httpRequest != null)
                 {
-                    string sessionId = this.SetRequestSession(httpRequest);
-                    var httpResponse = this.HandleRequest(httpRequest);
-
-                    if (!httpRequest.Cookies.CookieIsNew(HttpSessionStorage.SessionCookieKey, sessionId))
-                    {
-                        this.SetResponseSession(httpResponse, sessionId);
-                    }
+                    var sessionId = this.SetRequestSession(httpRequest);
+                    var httpResponse = this.handler.Handle(httpRequest);
 
                     this.SetResponseSession(httpResponse, sessionId);
                     await this.PrepareResponse(httpResponse);
@@ -56,11 +62,11 @@
             }
             catch (BadRequestException e)
             {
-                await this.PrepareResponse(new TextResult(e.Message, HttpResponseStatusCode.BadRequest));
+                await this.PrepareResponse(new TextResult(e.ToString(), HttpResponseStatusCode.BadRequest));
             }
             catch (Exception e)
             {
-                await this.PrepareResponse(new TextResult(e.Message, HttpResponseStatusCode.InternalServerError));
+                await this.PrepareResponse(new TextResult(e.ToString(), HttpResponseStatusCode.InternalServerError));
             }
 
             this.client.Shutdown(SocketShutdown.Both);
@@ -73,7 +79,7 @@
 
             while (true)
             {
-                int numberOfBytesRead = await this.client.ReceiveAsync(data.Array, SocketFlags.None);
+                var numberOfBytesRead = await this.client.ReceiveAsync(data.Array, SocketFlags.None);
 
                 if (numberOfBytesRead == 0)
                 {
@@ -97,43 +103,42 @@
             return new HttpRequest(result.ToString());
         }
 
-        private IHttpResponse HandleRequest(IHttpRequest httpRequest)
-        {
-            if (!this.serverRoutingTable.Routes.ContainsKey(httpRequest.RequestMethod) || !this.serverRoutingTable.Routes[httpRequest.RequestMethod].ContainsKey(httpRequest.Path))
-            {
-                return this.ReturnIfResource(httpRequest.Path);
-            }
+        //private IHttpResponse HandleRequest(IHttpRequest httpRequest)
+        //{
+        //    if (!this.serverRoutingTable.Routes.ContainsKey(httpRequest.RequestMethod) || !this.serverRoutingTable.Routes[httpRequest.RequestMethod].ContainsKey(httpRequest.Path))
+        //    {
+        //        return this.ReturnIfResource(httpRequest.Path);
+        //    }
 
-            return this.serverRoutingTable.Routes[httpRequest.RequestMethod][httpRequest.Path].Invoke(httpRequest);
-        }
+        //    return this.serverRoutingTable.Routes[httpRequest.RequestMethod][httpRequest.Path].Invoke(httpRequest);
+        //}
 
-        private IHttpResponse ReturnIfResource(string httpRequestPath)
-        {
-            var fileExtension = httpRequestPath.Substring(httpRequestPath.LastIndexOf('.') + 1);
-            var resourcePath = httpRequestPath.Substring(httpRequestPath.LastIndexOf('/'));
+        //private IHttpResponse ReturnIfResource(string httpRequestPath)
+        //{
+        //    var fileExtension = httpRequestPath.Substring(httpRequestPath.LastIndexOf('.') + 1);
+        //    var resourcePath = httpRequestPath.Substring(httpRequestPath.LastIndexOf('/'));
 
-            if (!resoureExtentions.Contains(fileExtension))
-            {
-                return new HttpResponse(HttpResponseStatusCode.NotFound);
-            }
+        //    if (!resoureExtentions.Contains(fileExtension))
+        //    {
+        //        return new HttpResponse(HttpResponseStatusCode.NotFound);
+        //    }
 
-            var pathToSearch = RESOURCES_DIRECTORY_RELATIVE_PATH +
-                               fileExtension +
-                               resourcePath;
+        //    var pathToSearch = RESOURCES_DIRECTORY_RELATIVE_PATH +
+        //                       fileExtension +
+        //                       resourcePath;
 
-            if (!File.Exists(pathToSearch))
-            {
-                return new HttpResponse(HttpResponseStatusCode.NotFound);
-            }
+        //    if (!File.Exists(pathToSearch))
+        //    {
+        //        return new HttpResponse(HttpResponseStatusCode.NotFound);
+        //    }
 
-            var fileBytes = File.ReadAllBytes(pathToSearch);
-            return new InlineResourceResult(fileBytes, HttpResponseStatusCode.Ok);
-        }
+        //    var fileBytes = File.ReadAllBytes(pathToSearch);
+        //    return new InlineResourceResult(fileBytes, HttpResponseStatusCode.Ok);
+        //}
 
         private async Task PrepareResponse(IHttpResponse httpResponse)
         {
-            byte[] byteSegments = httpResponse.GetBytes();
-
+            var byteSegments = httpResponse.GetBytes();
             await this.client.SendAsync(byteSegments, SocketFlags.None);
         }
 
@@ -160,7 +165,7 @@
         {
             if (sessionId != null)
             {
-                httpResponse.AddCookie(new HttpCookie(HttpSessionStorage.SessionCookieKey, $"{sessionId}; HttpOnly"));
+                httpResponse.AddCookie(new HttpCookie(HttpSessionStorage.SessionCookieKey, sessionId));
             }
         }
     }
