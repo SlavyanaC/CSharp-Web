@@ -15,10 +15,11 @@
         [HttpGet("/hello")]
         public IHttpResponse HelloUser()
         {
-            return this.View("HelloUser", new Dictionary<string, string>
-            {
-                {"Username", this.User}
-            });
+            return this.View("HelloUser", new
+                Dictionary<string, string>
+                {
+                    {"Username", this.User}
+                });
         }
     }
 }

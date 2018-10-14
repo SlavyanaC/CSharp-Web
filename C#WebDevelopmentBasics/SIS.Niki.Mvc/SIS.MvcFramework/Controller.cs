@@ -7,14 +7,12 @@
     using HTTP.Enums;
     using HTTP.Requests.Contracts;
     using HTTP.Responses.Contracts;
-    using Services;
     using Services.Contracts;
 
     public abstract class Controller
     {
         protected Controller()
         {
-            this.UserCookieService = new UserCookieService();
             this.Response = new HttpResponse { StatusCode = HttpResponseStatusCode.Ok };
         }
 
@@ -22,7 +20,7 @@
 
         public IHttpResponse Response { get; set; }
 
-        protected IUserCookieService UserCookieService { get; }
+        public IUserCookieService UserCookieService { get; internal set; }
 
         protected string User
         {

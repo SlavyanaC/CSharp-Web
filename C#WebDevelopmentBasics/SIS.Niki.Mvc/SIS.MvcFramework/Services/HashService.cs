@@ -4,9 +4,17 @@
     using System.Security.Cryptography;
     using System.Text;
     using Contracts;
+    using Loggers.Contracts;
 
     public class HashService : IHashService
     {
+        private readonly ILogger logger;
+
+        public HashService(ILogger logger)
+        {
+            this.logger = logger;
+        }
+
         public string StrongHash(string stringToHash)
         {
             var result = stringToHash;
@@ -27,6 +35,7 @@
                 var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(stringToHash));
                 // Get the hashed string.  
                 var hash = BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
+                this.logger.Log(hash);
                 return hash;
             }
         }
