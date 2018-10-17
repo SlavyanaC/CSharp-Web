@@ -1,5 +1,4 @@
-﻿using SIS.HTTP.Enums;
-using SIS.WebServer.Results;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace SIS.Framework.Routers
 {
@@ -7,11 +6,13 @@ namespace SIS.Framework.Routers
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
+    using HTTP.Enums;
+    using WebServer.Results;
+    using HTTP.Responses.Contracts;
+    using HTTP.Requests.Contracts;
     using ActionResults.Contracts;
     using Attributes.Methods;
     using Controllers;
-    using HTTP.Requests.Contracts;
-    using HTTP.Responses.Contracts;
     using WebServer.Api.Contracts;
 
     public class ControllerRouter : IHttpHandler
@@ -43,7 +44,107 @@ namespace SIS.Framework.Routers
                 throw new NullReferenceException();
             }
 
-            return this.PrepareResponse(controller, action);
+            // TODO: ?!?
+            var actionParameters = this.MapActionParameters(controller, action, request);
+
+            var actionResult = this.InvokeAction(controller, action, actionParameters);
+            return this.PrepareResponse(actionResult);
+        }
+
+        private IActionResult InvokeAction(Controller controller, MethodInfo action, object[] actionParameters)
+        {
+            return (IActionResult)action.Invoke(controller, actionParameters);
+        }
+
+        private object[] MapActionParameters(Controller controller, MethodInfo action, IHttpRequest httpRequest)
+        {
+            var actionParametersInfo = action.GetParameters();
+            var mappedActionParameters = new object[actionParametersInfo.Length];
+
+            for (var i = 0; i < actionParametersInfo.Length; i++)
+            {
+                var currentParameterInfo = actionParametersInfo[i];
+                if (currentParameterInfo.ParameterType.IsPrimitive ||
+                    currentParameterInfo.ParameterType == typeof(string))
+                {
+                    mappedActionParameters[i] = this.ProcessPrimitiveParameters(currentParameterInfo, httpRequest);
+                }
+                else
+                {
+                    var bindingModel = this.ProcessBindingModelParameters(currentParameterInfo, httpRequest);
+                    controller.ModelState.IsValid = this.IsValidModel(bindingModel, currentParameterInfo.ParameterType);
+                    mappedActionParameters[i] = bindingModel;
+                }
+            }
+
+            return mappedActionParameters;
+        }
+
+        private bool? IsValidModel(object bindingModel, Type bindingModelType)
+        {
+            var properties = bindingModelType.GetProperties();
+
+            foreach (var property in properties)
+            {
+                var propertyValidationAttributes = property.GetCustomAttributes()
+                    .Where(ca => ca is ValidationAttribute)
+                    .Cast<ValidationAttribute>()
+                    .ToList();
+
+                foreach (var validationAttribute in propertyValidationAttributes)
+                {
+                    var propertyValue = property.GetValue(bindingModel);
+                    if (!validationAttribute.IsValid(propertyValue))
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        private object ProcessBindingModelParameters(ParameterInfo parameter, IHttpRequest httpRequest)
+        {
+            var bindingModelType = parameter.ParameterType;
+
+            var bindingModelInstance = Activator.CreateInstance(bindingModelType);
+            var bindingModelProperties = bindingModelType.GetProperties();
+
+            foreach (var property in bindingModelProperties)
+            {
+                try
+                {
+                    var value = this.GetParameterFromRequestData(httpRequest, property.Name);
+                    property.SetValue(bindingModelInstance, Convert.ChangeType(value, property.PropertyType));
+                }
+                catch
+                {
+                    Console.WriteLine($"The {property.Name} field could not be mapped");
+                }
+            }
+
+            return Convert.ChangeType(bindingModelInstance, bindingModelType);
+        }
+
+        private object ProcessPrimitiveParameters(ParameterInfo parameter, IHttpRequest httpRequest)
+        {
+            var value = this.GetParameterFromRequestData(httpRequest, parameter.Name);
+            return Convert.ChangeType(value, parameter.ParameterType);
+        }
+
+        private object GetParameterFromRequestData(IHttpRequest httpRequest, string parameterName)
+        {
+            if (httpRequest.QueryData.ContainsKey(parameterName))
+            {
+                return httpRequest.QueryData[parameterName];
+            }
+            if (httpRequest.FormData.ContainsKey(parameterName))
+            {
+                return httpRequest.FormData[parameterName];
+            }
+
+            return null;
         }
 
         private Controller GetController(string controllerName, IHttpRequest request)
@@ -109,22 +210,19 @@ namespace SIS.Framework.Routers
                 .Where(mi => string.Equals(mi.Name, actionName, StringComparison.OrdinalIgnoreCase));
         }
 
-        //TODO: Check this
-        private IHttpResponse PrepareResponse(Controller controller, MethodInfo action)
+        private IHttpResponse PrepareResponse(IActionResult actionResult)
         {
-            var actionResult = (IActionResult)action.Invoke(controller, null);
             var invocationType = actionResult.Invoke();
 
-            if (actionResult is IViewable)
+            switch (actionResult)
             {
-                return new HtmlResult(invocationType, HttpResponseStatusCode.Ok);
+                case IViewable _:
+                    return new HtmlResult(invocationType, HttpResponseStatusCode.Ok);
+                case IRedirectable _:
+                    return new RedirectResult(invocationType);
+                default:
+                    throw new InvalidOperationException("Unsupported action!");
             }
-            else if (actionResult is IRedirectable)
-            {
-                return new RedirectResult(invocationType);
-            }
-
-            return null;
         }
     }
 }
