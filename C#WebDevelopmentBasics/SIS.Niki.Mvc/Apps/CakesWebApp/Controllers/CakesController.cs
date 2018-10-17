@@ -1,8 +1,6 @@
 ﻿namespace CakesWebApp.Controllers
 {
     using System;
-    using System.Collections.Generic;
-    using System.Globalization;
     using System.Linq;
     using SIS.HTTP.Responses.Contracts;
     using SIS.MvcFramework.Attributes;
@@ -44,11 +42,9 @@
             }
             catch (Exception e)
             {
-                // TODO: Log error
                 return this.ServerError(e.Message);
             }
 
-            // Redirect
             return this.Redirect("/");
         }
 
@@ -63,14 +59,14 @@
                 return this.BadRequestError("Cake not found.");
             }
 
-            // TODO: to view model
-            var viewBag = new Dictionary<string, string>
+            var viewModel = new ByIdInputModel()
             {
-                {"Name", product.Name},
-                {"Price", product.Price.ToString(CultureInfo.InvariantCulture)},
-                {"ImageUrl", product.ImageUrl}
+                Name = product.Name,
+                Price = product.Price,
+                ImageUrl = product.ImageUrl,
             };
-            return this.View("CakeById", viewBag);
+
+            return this.View("CakeById", viewModel);
         }
     }
 }

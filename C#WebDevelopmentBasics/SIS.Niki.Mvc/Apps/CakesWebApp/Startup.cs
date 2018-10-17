@@ -5,6 +5,8 @@
     using SIS.MvcFramework.Loggers.Contracts;
     using SIS.MvcFramework.Services;
     using SIS.MvcFramework.Services.Contracts;
+    using SIS.MvcFramework.ViewEngine;
+    using SIS.MvcFramework.ViewEngine.Contracts;
 
     public class Startup : IMvcApplication
     {
@@ -14,10 +16,10 @@
 
         public void ConfigureServices(IServiceCollection collection)
         {
-            // TODO: Implement IoC/DI container
             collection.AddService<IHashService, HashService>();
             collection.AddService<IUserCookieService, UserCookieService>();
-            collection.AddService<ILogger, FileLogger>();
+            collection.AddService<IViewEngine, ViewEngine>();
+            collection.AddService<ILogger>(() => new FileLogger("log.txt"));
         }
     }
 }
