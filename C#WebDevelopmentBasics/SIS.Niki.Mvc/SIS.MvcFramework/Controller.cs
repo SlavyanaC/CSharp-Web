@@ -2,11 +2,13 @@
 {
     using System.Collections.Generic;
     using System.Text;
+    using SIO = System.IO;
     using HTTP.Headers;
     using HTTP.Responses;
     using HTTP.Enums;
     using HTTP.Requests.Contracts;
     using HTTP.Responses.Contracts;
+    using ViewEngine.Contracts;
     using Services.Contracts;
 
     public abstract class Controller
@@ -19,6 +21,8 @@
         public IHttpRequest Request { get; set; }
 
         public IHttpResponse Response { get; set; }
+
+        public IViewEngine ViewEngine { get; set; }
 
         public IUserCookieService UserCookieService { get; internal set; }
 
@@ -39,14 +43,17 @@
             }
         }
 
-        protected IHttpResponse View(string viewName, IDictionary<string, string> viewBag = null)
+        protected IHttpResponse View(string viewName)
         {
-            if (viewBag == null)
-            {
-                viewBag = new Dictionary<string, string>();
-            }
+            var allContent = this.GetViewContent(viewName, (object)null);
+            this.PrepareHtmlResult(allContent);
+            return this.Response;
+        }
 
-            var allContent = this.GetViewContent(viewName, viewBag);
+        protected IHttpResponse View<T>(string viewName, T model = null)
+            where T : class
+        {
+            var allContent = this.GetViewContent(viewName, model);
             this.PrepareHtmlResult(allContent);
             return this.Response;
         }
@@ -99,17 +106,13 @@
             return this.Response;
         }
 
-        private string GetViewContent(string viewName, IDictionary<string, string> viewBag)
+        private string GetViewContent<T>(string viewName, T model)
         {
-            var layoutContent = System.IO.File.ReadAllText("Views/_Layout.html");
-            var content = System.IO.File.ReadAllText("Views/" + viewName + ".html");
-            foreach (var item in viewBag)
-            {
-                content = content.Replace("@Model." + item.Key, item.Value);
-            }
-
-            var allContent = layoutContent.Replace("@RenderBody()", content);
-            return allContent;
+            var content = this.ViewEngine.GetHtml(viewName, SIO.File.ReadAllText("Views/" + viewName + ".html"), model);
+            var layoutFileContent = SIO.File.ReadAllText("Views/_Layout.html");
+            var allContent = layoutFileContent.Replace("@RenderBody()", content);
+            var layoutContent = this.ViewEngine.GetHtml("_Layout", allContent, model);
+            return layoutContent;
         }
 
         private void PrepareHtmlResult(string content)

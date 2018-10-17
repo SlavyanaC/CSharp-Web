@@ -77,6 +77,7 @@
             }
 
             controllerInstance.Request = request;
+            controllerInstance.ViewEngine = new ViewEngine.ViewEngine(); // TODO: use serviceCollection
             controllerInstance.UserCookieService = serviceCollection.CreateInstance<IUserCookieService>();
 
             var actionParameterObjects = GetActionParameterObjects(methodInfo, request, serviceCollection);
@@ -91,7 +92,6 @@
             var actionParameterObjects = new List<object>();
             foreach (var actionParameter in actionParameters)
             {
-                // TODO: Improve this check
                 if (actionParameter.ParameterType.IsValueType ||
                     Type.GetTypeCode(actionParameter.ParameterType) == TypeCode.String)
                 {
@@ -165,16 +165,16 @@
                     }
                     break;
                 case TypeCode.Decimal:
-                {
-                    if (decimal.TryParse(stringValue, out var parsedValue))
-                        value = parsedValue;
-                }
+                    {
+                        if (decimal.TryParse(stringValue, out var parsedValue))
+                            value = parsedValue;
+                    }
                     break;
                 case TypeCode.DateTime:
-                {
-                    if (DateTime.TryParse(stringValue, out var parsedValue))
-                        value = parsedValue;
-                }
+                    {
+                        if (DateTime.TryParse(stringValue, out var parsedValue))
+                            value = parsedValue;
+                    }
                     break;
                 case TypeCode.String:
                     value = stringValue;

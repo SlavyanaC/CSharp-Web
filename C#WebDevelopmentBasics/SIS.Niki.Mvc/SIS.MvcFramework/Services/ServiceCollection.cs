@@ -43,7 +43,6 @@
                 throw new Exception($"Type {type.FullName} cannot be instantiated.");
             }
 
-            //TODO: if empty -> use it
             var constructor = type.GetConstructors().OrderBy(c => c.GetParameters().Length).First();
             var constructorParams = constructor.GetParameters();
             var constructorParamObjects = new List<object>();
