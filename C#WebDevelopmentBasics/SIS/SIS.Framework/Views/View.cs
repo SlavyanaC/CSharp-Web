@@ -1,8 +1,7 @@
-﻿using System.Linq;
-
-namespace SIS.Framework.Views
+﻿namespace SIS.Framework.Views
 {
     using System.IO;
+    using System.Linq;
     using System.Collections.Generic;
     using ActionResults.Contracts;
 
@@ -38,17 +37,19 @@ namespace SIS.Framework.Views
 
         private string RenderHtml(string fullHtml)
         {
-            var renderedHtml = fullHtml;
-
             if (this.viewData.Any())
             {
                 foreach (var parameter in this.viewData)
                 {
-                    renderedHtml = renderedHtml.Replace($"{{{{{{{parameter.Key}}}}}", parameter.Value.ToString());
+                    var dynamicDataPlaceholder = $"{{{{{{{parameter.Key}}}}}";
+                    if (fullHtml.Contains(dynamicDataPlaceholder))
+                    {
+                        fullHtml = fullHtml.Replace(dynamicDataPlaceholder, parameter.Value.ToString());
+                    }
                 }
             }
 
-            return renderedHtml;
+            return fullHtml;
         }
     }
 }

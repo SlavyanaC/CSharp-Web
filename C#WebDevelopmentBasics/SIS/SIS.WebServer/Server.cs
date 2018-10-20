@@ -12,21 +12,20 @@
         private const string LocalhostIpAddress = "127.0.0.1";
 
         private readonly int port;
-
         private readonly TcpListener listener;
-
         private readonly ServerRoutingTable serverRoutingTable;
-
-        private readonly IHttpHandler handler;
+        private readonly IHttpHandler requestHandler;
+        private readonly IHttpHandler fileHandler;
 
         private bool isRunning;
 
-        public Server(int port, IHttpHandler handler)
+        public Server(int port, IHttpHandler requestHandler, IHttpHandler fileHandler)
         {
             this.port = port;
             this.listener = new TcpListener(IPAddress.Parse(LocalhostIpAddress), port);
 
-            this.handler = handler;
+            this.requestHandler = requestHandler;
+            this.fileHandler = fileHandler;
         }
 
         public Server(int port, ServerRoutingTable serverRoutingTable)
@@ -49,15 +48,9 @@
             }
         }
 
-        //public async Task ListenLoop(Socket client)
-        //{
-        //    var connectionHandler = new ConnectionHandler(client, this.serverRoutingTable);
-        //    await connectionHandler.ProcessRequestAsync();
-        //}
-
         public async Task ListenLoop(Socket client)
         {
-            var connectionHandler = new ConnectionHandler(client, this.handler);
+            var connectionHandler = new ConnectionHandler(client, this.requestHandler, this.fileHandler);
             await connectionHandler.ProcessRequestAsync();
         }
     }

@@ -21,28 +21,18 @@
 
     public class ConnectionHandler
     {
-        //private const string RESOURCES_DIRECTORY_RELATIVE_PATH = "../../../Resources/";
-
-        //private readonly string[] resoureExtentions = { "css", "js" };
         private readonly Socket client;
-        //private readonly ServerRoutingTable serverRoutingTable;
-        private readonly IHttpHandler handler;
+        private readonly IHttpHandler requestHandler;
+        private readonly IHttpHandler fileHandler;
 
-        //public ConnectionHandler(Socket client, ServerRoutingTable serverRoutingTable)
-        //{
-        //    CoreValidator.ThrowIfNull(client, nameof(client));
-        //    CoreValidator.ThrowIfNull(serverRoutingTable, nameof(serverRoutingTable));
-        //    this.client = client;
-        //    this.serverRoutingTable = serverRoutingTable;
-        //}
-
-        public ConnectionHandler(Socket client, IHttpHandler handler)
+        public ConnectionHandler(Socket client, IHttpHandler requestHandler, IHttpHandler fileHandler)
         {
             CoreValidator.ThrowIfNull(client, nameof(client));
-            CoreValidator.ThrowIfNull(handler, nameof(handler));
+            CoreValidator.ThrowIfNull(requestHandler, nameof(requestHandler));
 
             this.client = client;
-            this.handler = handler;
+            this.requestHandler = requestHandler;
+            this.fileHandler = fileHandler;
         }
 
         public async Task ProcessRequestAsync()
@@ -53,10 +43,7 @@
 
                 if (httpRequest != null)
                 {
-                    var sessionId = this.SetRequestSession(httpRequest);
-                    var httpResponse = this.handler.Handle(httpRequest);
-
-                    this.SetResponseSession(httpResponse, sessionId);
+                    var httpResponse = this.HandleRequest(httpRequest);
                     await this.PrepareResponse(httpResponse);
                 }
             }
@@ -103,38 +90,22 @@
             return new HttpRequest(result.ToString());
         }
 
-        //private IHttpResponse HandleRequest(IHttpRequest httpRequest)
-        //{
-        //    if (!this.serverRoutingTable.Routes.ContainsKey(httpRequest.RequestMethod) || !this.serverRoutingTable.Routes[httpRequest.RequestMethod].ContainsKey(httpRequest.Path))
-        //    {
-        //        return this.ReturnIfResource(httpRequest.Path);
-        //    }
+        private IHttpResponse HandleRequest(IHttpRequest httpRequest)
+        {
+            IHttpResponse httpResponse = null;
+            if (httpRequest.Path.Contains("."))
+            {
+                httpResponse = this.fileHandler.Handle(httpRequest);
+            }
+            else
+            {
+                string sessionId = this.SetRequestSession(httpRequest);
+                httpResponse = this.requestHandler.Handle(httpRequest);
+                this.SetResponseSession(httpResponse, sessionId);
+            }
 
-        //    return this.serverRoutingTable.Routes[httpRequest.RequestMethod][httpRequest.Path].Invoke(httpRequest);
-        //}
-
-        //private IHttpResponse ReturnIfResource(string httpRequestPath)
-        //{
-        //    var fileExtension = httpRequestPath.Substring(httpRequestPath.LastIndexOf('.') + 1);
-        //    var resourcePath = httpRequestPath.Substring(httpRequestPath.LastIndexOf('/'));
-
-        //    if (!resoureExtentions.Contains(fileExtension))
-        //    {
-        //        return new HttpResponse(HttpResponseStatusCode.NotFound);
-        //    }
-
-        //    var pathToSearch = RESOURCES_DIRECTORY_RELATIVE_PATH +
-        //                       fileExtension +
-        //                       resourcePath;
-
-        //    if (!File.Exists(pathToSearch))
-        //    {
-        //        return new HttpResponse(HttpResponseStatusCode.NotFound);
-        //    }
-
-        //    var fileBytes = File.ReadAllBytes(pathToSearch);
-        //    return new InlineResourceResult(fileBytes, HttpResponseStatusCode.Ok);
-        //}
+            return httpResponse;
+        }
 
         private async Task PrepareResponse(IHttpResponse httpResponse)
         {

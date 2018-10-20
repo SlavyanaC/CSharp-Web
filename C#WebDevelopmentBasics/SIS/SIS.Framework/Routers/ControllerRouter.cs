@@ -1,11 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace SIS.Framework.Routers
+﻿namespace SIS.Framework.Routers
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
+    using System.ComponentModel.DataAnnotations;
     using HTTP.Enums;
     using WebServer.Results;
     using HTTP.Responses.Contracts;

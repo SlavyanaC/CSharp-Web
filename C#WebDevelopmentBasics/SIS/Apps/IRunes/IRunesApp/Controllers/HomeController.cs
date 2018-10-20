@@ -7,14 +7,14 @@
     {
         public IHttpResponse Index(IHttpRequest request)
         {
-            if (!this.IsAuthenticated(request))
-            {
-                return this.View();
-            }
+            //if (!this.IsAuthenticated(request))
+            //{
+            //    return this.View();
+            //}
 
-            var username = request.Session.GetParameter("username");
-            this.ViewBag["username"] = username.ToString();
-            return this.View("IndexLogged-in");
+            //var username = request.Session.GetParameter("username");
+            //this.ViewBag["username"] = username.ToString();
+            return this.View();
 
         }
     }

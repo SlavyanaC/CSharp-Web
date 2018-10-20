@@ -6,7 +6,7 @@
     using SIS.WebServer.Results;
     using SIS.WebServer.Routing;
 
-    public class StartUp
+    public class Program
     {
         static void Main(string[] args)
         {
