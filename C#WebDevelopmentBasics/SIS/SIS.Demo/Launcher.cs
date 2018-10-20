@@ -3,12 +3,19 @@
     using Framework;
     using Framework.Routers;
     using WebServer;
+    using Framework.Services;
+    using Services;
+    using Services.Contracts;
 
     public class Launcher
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            var server = new Server(80, new ControllerRouter(), new ResourceRouter());
+            var dependencyContainer = new DependencyContainer();
+            dependencyContainer.RegisterDependency<IUserCookieService, UserCookieService>();
+            dependencyContainer.RegisterDependency<IHashService, HashService>();
+
+            var server = new Server(80, new ControllerRouter(dependencyContainer), new ResourceRouter());
             MvcEngine.Run(server);
         }
     }
