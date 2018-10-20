@@ -1,4 +1,6 @@
-﻿namespace SIS.Framework.Routers
+﻿using SIS.Framework.Services.Contracts;
+
+namespace SIS.Framework.Routers
 {
     using System;
     using System.Collections.Generic;
@@ -16,6 +18,13 @@
 
     public class ControllerRouter : IHttpHandler
     {
+        private readonly IDependencyContainer dependencyContainer;
+
+        public ControllerRouter(IDependencyContainer dependencyContainer)
+        {
+            this.dependencyContainer = dependencyContainer;
+        }
+
         public IHttpResponse Handle(IHttpRequest request)
         {
             var controllerName = string.Empty;
@@ -160,7 +169,8 @@
                 "Controller");
 
             var controllerType = Type.GetType(controllerTypeName);
-            var controller = (Controller)Activator.CreateInstance(controllerType);
+            //var controller = (Controller)Activator.CreateInstance(controllerType);
+            var controller = (Controller)this.dependencyContainer.CreateInstance(controllerType);
 
             if (controller != null)
             {
