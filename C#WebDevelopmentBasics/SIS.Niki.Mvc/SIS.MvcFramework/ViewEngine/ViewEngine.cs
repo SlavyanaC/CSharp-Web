@@ -99,9 +99,15 @@
             var stringBuilder = new StringBuilder();
             foreach (var line in lines)
             {
-                if (line.Trim().StartsWith("{") || line.Trim().StartsWith("}") ||
-                    line.Trim().StartsWith("@if") || line.Trim().StartsWith("@else") ||
-                    line.Trim().StartsWith("@for"))
+                if (line.Trim().StartsWith("{") && line.Trim().EndsWith("}"))
+                {
+                    var cSharpLine = line.Trim();
+                    cSharpLine = cSharpLine.Substring(1, cSharpLine.Length - 2);
+                    stringBuilder.AppendLine(cSharpLine);
+                }
+                else if (line.Trim().StartsWith("{") || line.Trim().StartsWith("}") ||
+                     line.Trim().StartsWith("@if") || line.Trim().StartsWith("@else") ||
+                     line.Trim().StartsWith("@for"))
                 {
                     // CSharp
                     var firstAtSymbolIndex = line.IndexOf("@", StringComparison.InvariantCulture);
