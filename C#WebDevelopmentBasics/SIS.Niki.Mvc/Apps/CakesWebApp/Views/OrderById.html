@@ -1,0 +1,15 @@
+﻿@if(Model.IsShoppingCart)
+{
+    <h1>Shopping cart</h1>
+}
+@else
+{
+    <h1>Order with id @Model.Id</h1>
+}
+
+@foreach(var cake in Model.Cakes)
+{
+    <div>
+        <a href="/cakes/view?id=@cake.Id">@cake.Name</a> $@cake.Price
+    </div>
+}
