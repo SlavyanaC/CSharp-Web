@@ -101,20 +101,20 @@
         {
             if (!this.serverRoutingTable.Routes.ContainsKey(httpRequest.RequestMethod) || !this.serverRoutingTable.Routes[httpRequest.RequestMethod].ContainsKey(httpRequest.Path))
             {
-                return new TextResult($"Route with method {httpRequest.RequestMethod} and path \"{httpRequest.Path}\" not fount.", HttpResponseStatusCode.NotFound);
+                return this.ReturnIfResource(httpRequest.RequestMethod.ToString(), httpRequest.Path);
             }
 
             return this.serverRoutingTable.Routes[httpRequest.RequestMethod][httpRequest.Path].Invoke(httpRequest);
         }
 
-        private IHttpResponse ReturnIfResource(string httpRequestPath)
+        private IHttpResponse ReturnIfResource(string requestMethod, string httpRequestPath)
         {
             var fileExtension = httpRequestPath.Substring(httpRequestPath.LastIndexOf('.') + 1);
             var resourcePath = httpRequestPath.Substring(httpRequestPath.LastIndexOf('/'));
 
             if (!resoureExtentions.Contains(fileExtension))
             {
-                return new HttpResponse(HttpResponseStatusCode.NotFound);
+                return new TextResult($"Route with method {requestMethod} and path \"{httpRequestPath}\" not fount.", HttpResponseStatusCode.NotFound);
             }
 
             var pathToSearch = RESOURCES_DIRECTORY_RELATIVE_PATH +
