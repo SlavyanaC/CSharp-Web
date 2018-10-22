@@ -4,7 +4,7 @@
 
     public class SearchViewModel
     {
-        public List<CakeByIdViewModel> Cakes { get; set; }
+        public List<CakeViewModel> Cakes { get; set; }
 
         public string SearchText { get; set; }
     }
