@@ -1,8 +1,7 @@
-﻿using SIS.MvcFramework.ViewEngine;
-
-namespace SIS.MvcFramework
+﻿namespace SIS.MvcFramework
 {
-    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
     using System.Text;
     using SIO = System.IO;
     using HTTP.Headers;
@@ -11,6 +10,7 @@ namespace SIS.MvcFramework
     using HTTP.Requests.Contracts;
     using HTTP.Responses.Contracts;
     using ViewEngine.Contracts;
+    using ViewEngine;
     using Services.Contracts;
 
     public abstract class Controller
@@ -104,8 +104,32 @@ namespace SIS.MvcFramework
 
         private string GetViewContent<T>(string viewName, T model, string layoutName = "_Layout")
         {
-            var content = this.ViewEngine.GetHtml(viewName, SIO.File.ReadAllText("Views/" + viewName + ".html"), model,
-                this.User);
+            // TODO: What if there are two views with the same name?
+
+            var assemblyLocation = Assembly.GetEntryAssembly().Location;
+            var rootDirectoryPath = assemblyLocation.Substring(0, assemblyLocation.LastIndexOf("\\"));
+            var viewsDirectoryPath = rootDirectoryPath + "\\Views";
+
+            var viewsDirectoryFiles = SIO.Directory.GetFiles(viewsDirectoryPath);
+            var content = string.Empty;
+            if (viewsDirectoryFiles.Any(f => f.EndsWith(viewName + ".html")))
+            {
+                content = this.ViewEngine.GetHtml(viewName, SIO.File.ReadAllText("Views/" + viewName + ".html"), model,
+                   this.User);
+            }
+            else
+            {
+                var subDirectories = SIO.Directory.GetDirectories(viewsDirectoryPath);
+                foreach (var subDirectory in subDirectories)
+                {
+                    var directoryName = subDirectory.Substring(subDirectory.LastIndexOf("\\") + 1);
+                    var subDirectoryFiles = SIO.Directory.GetFiles(subDirectory);
+                    if (subDirectoryFiles.Any(f => f.EndsWith(viewName + ".html")))
+                    {
+                        content = this.ViewEngine.GetHtml(viewName, SIO.File.ReadAllText($"Views/{directoryName}/" + viewName + ".html"), model, this.User);
+                    }
+                }
+            }
 
             var layoutFileContent = SIO.File.ReadAllText($"Views/{layoutName}.html");
             var allContent = layoutFileContent.Replace("@RenderBody()", content);
