@@ -3,6 +3,7 @@
     using System;
     using System.Linq;
     using SIS.HTTP.Responses.Contracts;
+    using SIS.MvcFramework;
     using SIS.MvcFramework.Attributes;
     using SIS.MvcFramework.Loggers.Contracts;
     using Models;
@@ -27,12 +28,13 @@
         public IHttpResponse DoAddCakes(DoAddCakesViewModel model)
         {
             // TODO: Validation
-            var product = new Product
-            {
-                Name = model.Name,
-                Price = model.Price,
-                ImageUrl = model.Picture
-            };
+            var product = model.To<Product>();
+            //var product = new Product
+            //{
+            //    Name = model.Name,
+            //    Price = model.Price,
+            //    ImageUrl = model.ImageUrl
+            //};
             this.Db.Products.Add(product);
 
             try
@@ -44,26 +46,28 @@
                 return this.ServerError(e.Message);
             }
 
-            return this.Redirect("/");
+            return this.Redirect($"/cakes/view?id={product.Id}");
         }
 
         // cakes/view?id=1
         [HttpGet("/cakes/view")]
-        public IHttpResponse ById()
+        public IHttpResponse ById(int id)
         {
-            var id = int.Parse(this.Request.QueryData["id"].ToString());
+            //var id = int.Parse(this.Request.QueryData["id"].ToString());
             var product = this.Db.Products.FirstOrDefault(x => x.Id == id);
             if (product == null)
             {
                 return this.BadRequestError("Cake not found.");
             }
 
-            var viewModel = new CakeViewModel()
-            {
-                Name = product.Name,
-                Price = product.Price,
-                ImageUrl = product.ImageUrl,
-            };
+            //var viewModel = new CakeViewModel()
+            //{
+            //    Name = product.Name,
+            //    Price = product.Price,
+            //    ImageUrl = product.ImageUrl,
+            //};
+
+            var viewModel = product.To<CakeViewModel>();
 
             return this.View("CakeById", viewModel);
         }
