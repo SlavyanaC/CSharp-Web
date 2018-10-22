@@ -38,8 +38,8 @@
             IMvcApplication application, IServiceCollection serviceCollection)
         {
             var controllers = application.GetType().Assembly.GetTypes()
-                .Where(myType => myType.IsClass
-                                 && !myType.IsAbstract
+                .Where(myType => myType.IsClass 
+                                 && !myType.IsAbstract 
                                  && myType.IsSubclassOf(typeof(Controller)));
 
             foreach (var controller in controllers)
