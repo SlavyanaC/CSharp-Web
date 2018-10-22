@@ -41,6 +41,7 @@
                 .Where(myType => myType.IsClass
                                  && !myType.IsAbstract
                                  && myType.IsSubclassOf(typeof(Controller)));
+
             foreach (var controller in controllers)
             {
                 var getMethods = controller.GetMethods(BindingFlags.Public | BindingFlags.Instance).Where(
@@ -58,8 +59,14 @@
                         continue;
                     }
 
-                    routingTable.Add(httpAttribute.Method, httpAttribute.Path,
-                        (request) => ExecuteAction(controller, methodInfo, request, serviceCollection));
+                    var path = httpAttribute.Path;
+                    if (!path.StartsWith("/"))
+                    {
+                        path = "/" + path;
+                    }
+
+                    routingTable.Add(httpAttribute.Method, path, (request) => ExecuteAction(controller, methodInfo, request, serviceCollection));
+
                     Console.WriteLine($"Route registered: {controller.Name}.{methodInfo.Name} => {httpAttribute.Method} => {httpAttribute.Path}");
                 }
             }
