@@ -84,7 +84,7 @@ namespace SIS.MvcFramework
 
         protected IHttpResponse BadRequestError(string errorMessage)
         {
-            var viewModel = new ErrorViewContent{Error = errorMessage};
+            var viewModel = new ErrorViewContent { Error = errorMessage };
             var allContent = this.GetViewContent("Error", viewModel);
 
             this.PrepareHtmlResult(allContent);
@@ -94,7 +94,7 @@ namespace SIS.MvcFramework
 
         protected IHttpResponse ServerError(string errorMessage)
         {
-            var viewModel = new ErrorViewContent{Error = errorMessage};
+            var viewModel = new ErrorViewContent { Error = errorMessage };
             var allContent = this.GetViewContent("Error", viewModel);
 
             this.PrepareHtmlResult(allContent);
@@ -104,10 +104,12 @@ namespace SIS.MvcFramework
 
         private string GetViewContent<T>(string viewName, T model, string layoutName = "_Layout")
         {
-            var content = this.ViewEngine.GetHtml(viewName, SIO.File.ReadAllText("Views/" + viewName + ".html"), model);
+            var content = this.ViewEngine.GetHtml(viewName, SIO.File.ReadAllText("Views/" + viewName + ".html"), model,
+                this.User);
+
             var layoutFileContent = SIO.File.ReadAllText($"Views/{layoutName}.html");
             var allContent = layoutFileContent.Replace("@RenderBody()", content);
-            var layoutContent = this.ViewEngine.GetHtml("_Layout", allContent, model);
+            var layoutContent = this.ViewEngine.GetHtml("_Layout", allContent, model, this.User);
             return layoutContent;
         }
 
