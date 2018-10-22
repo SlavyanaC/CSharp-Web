@@ -2,7 +2,6 @@
 {
     using SIS.HTTP.Responses.Contracts;
     using SIS.MvcFramework.Attributes;
-    using ViewModels;
 
     public class HomeController : BaseController
     {
@@ -10,12 +9,6 @@
         public IHttpResponse Index()
         {
             return this.View("Index");
-        }
-
-        [HttpGet("/hello")]
-        public IHttpResponse HelloUser()
-        {
-            return this.View("HelloUser", new HelloUserViewModel { Username = this.User });
         }
     }
 }

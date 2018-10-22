@@ -3,7 +3,7 @@
     using System.Linq;
     using SIS.HTTP.Responses.Contracts;
     using SIS.MvcFramework.Attributes;
-    using ViewModels;
+    using ViewModels.User;
 
     public class UserController : BaseController
     {

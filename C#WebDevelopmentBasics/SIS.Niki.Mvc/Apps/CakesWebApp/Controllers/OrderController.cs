@@ -4,7 +4,8 @@
     using SIS.HTTP.Responses.Contracts;
     using SIS.MvcFramework.Attributes;
     using Models;
-    using ViewModels;
+    using ViewModels.Cake;
+    using ViewModels.Order;
 
     public class OrdersControllers : BaseController
     {

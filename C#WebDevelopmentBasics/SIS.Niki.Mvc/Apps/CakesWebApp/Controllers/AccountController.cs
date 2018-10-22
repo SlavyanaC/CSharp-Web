@@ -7,7 +7,7 @@
     using SIS.MvcFramework.Services.Contracts;
     using SIS.MvcFramework.Attributes;
     using Models;
-    using ViewModels;
+    using ViewModels.Account;
 
     public class AccountController : BaseController
     {

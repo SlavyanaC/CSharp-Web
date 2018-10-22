@@ -7,7 +7,7 @@
     using SIS.MvcFramework.Attributes;
     using SIS.MvcFramework.Loggers.Contracts;
     using Models;
-    using ViewModels;
+    using ViewModels.Cake;
 
     public class CakesController : BaseController
     {
@@ -25,7 +25,7 @@
         }
 
         [HttpPost("/cakes/add")]
-        public IHttpResponse DoAddCakes(DoAddCakesViewModel model)
+        public IHttpResponse DoAddCakes(DoAddCakeViewModel model)
         {
             // TODO: Validation
             var product = model.To<Product>();
