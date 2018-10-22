@@ -1,6 +1,7 @@
-﻿namespace CakesWebApp.ViewModels
+﻿namespace CakesWebApp.ViewModels.Order
 {
     using System.Collections.Generic;
+    using Cake;
 
     public class OrderViewModel
     {

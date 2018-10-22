@@ -1,4 +1,4 @@
-﻿namespace CakesWebApp.ViewModels
+﻿namespace CakesWebApp.ViewModels.Cake
 {
     using System.Collections.Generic;
 

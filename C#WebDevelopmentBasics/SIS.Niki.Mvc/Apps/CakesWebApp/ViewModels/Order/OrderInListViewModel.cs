@@ -1,4 +1,4 @@
-﻿namespace CakesWebApp.ViewModels
+﻿namespace CakesWebApp.ViewModels.Order
 {
     using System;
 

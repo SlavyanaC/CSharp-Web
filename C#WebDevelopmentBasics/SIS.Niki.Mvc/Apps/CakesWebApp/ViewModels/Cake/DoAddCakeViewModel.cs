@@ -1,6 +1,6 @@
-﻿namespace CakesWebApp.ViewModels
+﻿namespace CakesWebApp.ViewModels.Cake
 {
-    public class DoAddCakesViewModel
+    public class DoAddCakeViewModel
     {
         public string Name { get; set; }
 
