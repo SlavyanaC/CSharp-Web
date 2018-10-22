@@ -27,7 +27,6 @@
         public IHttpResponse DoAddCakes(DoAddCakesViewModel model)
         {
             // TODO: Validation
-
             var product = new Product
             {
                 Name = model.Name,
@@ -67,6 +66,27 @@
             };
 
             return this.View("CakeById", viewModel);
+        }
+
+        [HttpGet("/cakes/search")]
+        public IHttpResponse Search(string searchText)
+        {
+            var cakes = this.Db.Products.Where(p => p.Name.Contains(searchText))
+                .Select(p => new CakeByIdViewModel()
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Price = p.Price,
+                    ImageUrl = p.ImageUrl,
+                }).ToList();
+
+            var cakesViewModel = new SearchViewModel
+            {
+                Cakes = cakes,
+                SearchText = searchText
+            };
+
+            return this.View("Search", cakesViewModel);
         }
     }
 }
