@@ -1,6 +1,6 @@
 ﻿namespace CakesWebApp.ViewModels
 {
-    public class DoRegisterInputModel
+    public class DoRegisterViewModel
     {
         public string Username { get; set; }
 

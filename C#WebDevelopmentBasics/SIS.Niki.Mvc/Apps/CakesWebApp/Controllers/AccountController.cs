@@ -25,7 +25,7 @@
         }
 
         [HttpPost("/register")]
-        public IHttpResponse DoRegister(DoRegisterInputModel model)
+        public IHttpResponse DoRegister(DoRegisterViewModel model)
         {
             // Validate
             if (string.IsNullOrWhiteSpace(model.Username) || model.Username.Trim().Length < 4)
@@ -81,7 +81,7 @@
         }
 
         [HttpPost("/login")]
-        public IHttpResponse DoLogin(DoLoginInputModel model)
+        public IHttpResponse DoLogin(DoLoginViewModel model)
         {
             var hashedPassword = this.hashService.Hash(model.Password);
 

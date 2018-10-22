@@ -1,9 +1,7 @@
 ﻿namespace CakesWebApp.ViewModels
 {
-    public class DoLoginInputModel
+    public class HelloUserViewModel
     {
         public string Username { get; set; }
-
-        public string Password { get; set; }
     }
 }

@@ -24,7 +24,7 @@
         }
 
         [HttpPost("/cakes/add")]
-        public IHttpResponse DoAddCakes(DoAddCakesInputModel model)
+        public IHttpResponse DoAddCakes(DoAddCakesViewModel model)
         {
             // TODO: Validation
 
@@ -59,7 +59,7 @@
                 return this.BadRequestError("Cake not found.");
             }
 
-            var viewModel = new ByIdInputModel()
+            var viewModel = new CakeByIdViewModel()
             {
                 Name = product.Name,
                 Price = product.Price,
