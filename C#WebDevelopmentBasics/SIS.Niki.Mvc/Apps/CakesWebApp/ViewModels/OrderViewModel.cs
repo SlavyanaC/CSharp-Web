@@ -8,6 +8,6 @@
 
         public bool IsShoppingCart { get; set; }
 
-        public IEnumerable<CakeViewModel> Cakes { get; set; }
+        public IEnumerable<CakeViewModel> Products { get; set; }
     }
 }

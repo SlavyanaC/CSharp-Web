@@ -55,7 +55,7 @@
             var viewModel = new OrderViewModel
             {
                 Id = order.Id,
-                Cakes = this.Db.OrderProducts.Where(op => op.OrderId == order.Id)
+                Products = this.Db.OrderProducts.Where(op => op.OrderId == order.Id)
                     .Select(p => new CakeViewModel
                     {
                         Id = p.ProductId,
@@ -66,6 +66,46 @@
                 IsShoppingCart = lastOrderId == order.Id
             };
             return this.View("OrderById", viewModel);
+        }
+
+        [HttpGet("/orders/list")]
+        public IHttpResponse List()
+        {
+            var orders = this.Db.Orders.Where(x => x.User.Username == this.User)
+                .Select(o => new OrderInListViewModel
+                {
+                    Id = o.Id,
+                    CreatedOn = o.DateOfCreation,
+                    NumberOfProducts = o.Products.Count(),
+                    SumOfProductPrices = o.Products.Sum(p => p.Product.Price),
+                }).ToArray();
+
+            return this.View("OrdersList", orders);
+        }
+
+        [HttpPost("/orders/finish")]
+        public IHttpResponse Finish(int orderId)
+        {
+            var userId = this.Db.Users.FirstOrDefault(u => u.Username == this.User)?.Id;
+            if (userId == null)
+            {
+                return this.BadRequestError("Please login first.");
+            }
+
+            // Validate that the current user has permissions to finish this order
+            if (!this.Db.Orders.Any(o => o.Id == orderId && o.User.Username == this.User))
+            {
+                return this.BadRequestError("Order not found.");
+            }
+
+            var newEmptyOrder = new Order
+            {
+                UserId = userId.Value,
+            };
+
+            this.Db.Orders.Add(newEmptyOrder);
+            this.Db.SaveChanges();
+            return this.Redirect("/orders/list");
         }
     }
 }

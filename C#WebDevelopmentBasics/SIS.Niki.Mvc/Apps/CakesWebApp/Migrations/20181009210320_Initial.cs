@@ -9,7 +9,7 @@ namespace CakesWebApp.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Products",
+                name: "Cakes",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -80,7 +80,7 @@ namespace CakesWebApp.Migrations
                     table.ForeignKey(
                         name: "FK_OrderProducts_Products_ProductId",
                         column: x => x.ProductId,
-                        principalTable: "Products",
+                        principalTable: "Cakes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -110,7 +110,7 @@ namespace CakesWebApp.Migrations
                 name: "Orders");
 
             migrationBuilder.DropTable(
-                name: "Products");
+                name: "Cakes");
 
             migrationBuilder.DropTable(
                 name: "Users");

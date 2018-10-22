@@ -71,7 +71,7 @@ namespace CakesWebApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Products");
+                    b.ToTable("Cakes");
                 });
 
             modelBuilder.Entity("CakesWebApp.Models.User", b =>
@@ -104,7 +104,7 @@ namespace CakesWebApp.Migrations
             modelBuilder.Entity("CakesWebApp.Models.OrderProduct", b =>
                 {
                     b.HasOne("CakesWebApp.Models.Order", "Order")
-                        .WithMany("Products")
+                        .WithMany("Cakes")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade);
 
