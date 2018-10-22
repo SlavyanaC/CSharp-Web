@@ -18,13 +18,13 @@
             this.hashService = hashService;
         }
 
-        [HttpGet("/register")]
+        [HttpGet("/account/register")]
         public IHttpResponse Register()
         {
             return this.View("Register");
         }
 
-        [HttpPost("/register")]
+        [HttpPost("/account/register")]
         public IHttpResponse DoRegister(DoRegisterViewModel model)
         {
             // Validate
@@ -74,13 +74,13 @@
             return this.Redirect("/");
         }
 
-        [HttpGet("/login")]
+        [HttpGet("/account/login")]
         public IHttpResponse Login()
         {
             return this.View("Login");
         }
 
-        [HttpPost("/login")]
+        [HttpPost("account/login")]
         public IHttpResponse DoLogin(DoLoginViewModel model)
         {
             var hashedPassword = this.hashService.Hash(model.Password);
@@ -101,7 +101,7 @@
             return this.Redirect("/");
         }
 
-        [HttpGet("/logout")]
+        [HttpGet("/account/logout")]
         public IHttpResponse Logout()
         {
             if (!this.Request.Cookies.ContainsCookie(".auth-cakes"))
