@@ -29,7 +29,6 @@
                 return this.HandleRequestResponse(httpRequest.Path);
             }
 
-            //TODO: Add ...Path.ToLower()
             if (!this.serverRoutingTable.Routes.ContainsKey(httpRequest.RequestMethod) || !this.serverRoutingTable.Routes[httpRequest.RequestMethod].ContainsKey(httpRequest.Path))
             {
                 return new HttpResponse(HttpResponseStatusCode.NotFound);

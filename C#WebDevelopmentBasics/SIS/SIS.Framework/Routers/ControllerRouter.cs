@@ -1,4 +1,4 @@
-﻿using SIS.Framework.Services.Contracts;
+﻿using SIS.Framework.Attributes.Action;
 
 namespace SIS.Framework.Routers
 {
@@ -12,6 +12,7 @@ namespace SIS.Framework.Routers
     using HTTP.Responses.Contracts;
     using HTTP.Requests.Contracts;
     using ActionResults.Contracts;
+    using Services.Contracts;
     using Attributes.Methods;
     using Controllers;
     using WebServer.Api.Contracts;
@@ -52,11 +53,11 @@ namespace SIS.Framework.Routers
                 throw new NullReferenceException();
             }
 
-            // TODO: ?!?
             var actionParameters = this.MapActionParameters(controller, action, request);
-
             var actionResult = this.InvokeAction(controller, action, actionParameters);
-            return this.PrepareResponse(actionResult);
+
+            return this.Authorize(controller, action) ??
+                   this.PrepareResponse(this.InvokeAction(controller, action, actionParameters));
         }
 
         private IActionResult InvokeAction(Controller controller, MethodInfo action, object[] actionParameters)
@@ -232,6 +233,21 @@ namespace SIS.Framework.Routers
                 default:
                     throw new InvalidOperationException("Unsupported action!");
             }
+        }
+
+        private IHttpResponse Authorize(Controller controller, MethodInfo action)
+        {
+            var identityNotAuthenticated = action.GetCustomAttributes()
+                .Where(a => a is AuthorizeAttribute)
+                .Cast<AuthorizeAttribute>()
+                .Any(a => !a.IsAuthorized(controller.Identity));
+
+            if (identityNotAuthenticated)
+            {
+                return new UnauthorizedResult();
+            }
+
+            return null;
         }
     }
 }

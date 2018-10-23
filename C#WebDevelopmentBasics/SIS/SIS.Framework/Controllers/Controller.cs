@@ -7,6 +7,7 @@
     using Utilities;
     using Models;
     using Views;
+    using Security.Contracts;
 
     public abstract class Controller
     {
@@ -16,6 +17,9 @@
         }
 
         public IHttpRequest Request { get; set; }
+
+        // TODO: Check if this returns null or throws an error when cast doesn't succeed 
+        public IIdentity Identity => (IIdentity)this.Request.Session.GetParameter("auth");
 
         public ViewModel ViewModel { get; set; }
 
@@ -32,5 +36,26 @@
         }
 
         protected IRedirectable RedirectToAction(string redirectUrl) => new RedirectResult(redirectUrl);
+
+        protected void SignIn(IIdentity auth)
+        {
+            this.Request.Session.AddParameter("auth", auth);
+        }
+
+        protected void SignOut()
+        {
+            this.Request.Session.ClearParameters();
+        }
+
+        //Uncomment this if property Identity throws error
+        //public IIdentity Identity()
+        //{
+        //    if (this.Request.Session.ContainsParameter("auth"))
+        //    {
+        //        return (IIdentity)this.Request.Session.GetParameter("auth");
+        //    }
+
+        //    return null;
+        //}
     }
 }
