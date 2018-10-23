@@ -34,7 +34,7 @@ namespace SIS.Framework.Controllers
         protected IViewable View([CallerMemberName] string actionName = "")
         {
             var controllerName = ControllerUtilities.GetControllerName(this);
-            var viewContent = null;
+            string viewContent = null;
 
             try
             {
