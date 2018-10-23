@@ -1,4 +1,7 @@
-﻿namespace SIS.Framework.Controllers
+﻿using System;
+using System.IO;
+
+namespace SIS.Framework.Controllers
 {
     using System.Runtime.CompilerServices;
     using HTTP.Requests.Contracts;
@@ -13,7 +16,8 @@
     {
         protected Controller()
         {
-            this.ViewModel = new ViewModel();
+            this.Model = new ViewModel();
+            this.ViewEngine = new ViewEngine();
         }
 
         public IHttpRequest Request { get; set; }
@@ -21,18 +25,31 @@
         // TODO: Check if this returns null or throws an error when cast doesn't succeed 
         public IIdentity Identity => (IIdentity)this.Request.Session.GetParameter("auth");
 
-        public ViewModel ViewModel { get; set; }
+        public ViewModel Model { get; set; }
+
+        public ViewEngine ViewEngine { get; }
 
         public Model ModelState => new Model();
 
-        protected IViewable View([CallerMemberName] string caller = "")
+        protected IViewable View([CallerMemberName] string actionName = "")
         {
             var controllerName = ControllerUtilities.GetControllerName(this);
-            var fullyQualifiedName = ControllerUtilities.GetViewFullyQualifiedName(controllerName, caller);
+            var viewContent = null;
 
-            var view = new View(fullyQualifiedName, this.ViewModel.Data);
+            try
+            {
+                viewContent = this.ViewEngine.GetViewContent(controllerName, actionName);
+            }
+            catch (FileNotFoundException e)
+            {
+                this.Model.Data["Error"] = e.Message;
+                viewContent = this.ViewEngine.GetErrorContent();
+            }
 
-            return new ViewResult(view);
+            var renderedContent = this.ViewEngine.RenderHtml(viewContent, this.Model.Data);
+            var view = new View(renderedContent);
+            var viewResult = new ViewResult(view);
+            return viewResult;
         }
 
         protected IRedirectable RedirectToAction(string redirectUrl) => new RedirectResult(redirectUrl);

@@ -1,55 +1,59 @@
 ﻿namespace SIS.Framework.Views
 {
-    using System.IO;
-    using System.Linq;
-    using System.Collections.Generic;
     using ActionResults.Contracts;
 
     public class View : IRenderable
     {
-        private readonly string fullyQualifiedTemplateName;
+        private readonly string fullHtmlContent;
 
-        private readonly IDictionary<string, object> viewData;
-
-        public View(string fullyQualifiedTemplateName, IDictionary<string, object> viewData)
+        public View(string fullHtmlContent)
         {
-            this.fullyQualifiedTemplateName = fullyQualifiedTemplateName;
-            this.viewData = viewData;
+            this.fullHtmlContent = fullHtmlContent;
         }
 
-        public string Render()
-        {
-            var fullHtml = this.ReadFile();
-            var renderedHtml = this.RenderHtml(fullHtml);
+        public string Render() => this.fullHtmlContent;
 
-            return renderedHtml;
-        }
+        //private readonly IDictionary<string, object> viewData;
 
-        private string ReadFile()
-        {
-            if (!File.Exists(this.fullyQualifiedTemplateName))
-            {
-                throw new FileNotFoundException($"File {fullyQualifiedTemplateName} not found");
-            }
+        //public View(string fullHtmlContent, IDictionary<string, object> viewData)
+        //{
+        //    this.fullHtmlContent = fullHtmlContent;
+        //    this.viewData = viewData;
+        //}
 
-            return File.ReadAllText(this.fullyQualifiedTemplateName);
-        }
+        //public string Render()
+        //{
+        //    var fullHtml = this.ReadFile();
+        //    var renderedHtml = this.RenderHtml(fullHtml);
 
-        private string RenderHtml(string fullHtml)
-        {
-            if (this.viewData.Any())
-            {
-                foreach (var parameter in this.viewData)
-                {
-                    var dynamicDataPlaceholder = $"{{{{{{{parameter.Key}}}}}";
-                    if (fullHtml.Contains(dynamicDataPlaceholder))
-                    {
-                        fullHtml = fullHtml.Replace(dynamicDataPlaceholder, parameter.Value.ToString());
-                    }
-                }
-            }
+        //    return renderedHtml;
+        //}
 
-            return fullHtml;
-        }
+        //private string ReadFile()
+        //{
+        //    if (!File.Exists(this.fullHtmlContent))
+        //    {
+        //        throw new FileNotFoundException($"File {fullHtmlContent} not found");
+        //    }
+
+        //    return File.ReadAllText(this.fullHtmlContent);
+        //}
+
+        //private string RenderHtml(string fullHtml)
+        //{
+        //    if (this.viewData.Any())
+        //    {
+        //        foreach (var parameter in this.viewData)
+        //        {
+        //            var dynamicDataPlaceholder = $"{{{{{{{parameter.Key}}}}}";
+        //            if (fullHtml.Contains(dynamicDataPlaceholder))
+        //            {
+        //                fullHtml = fullHtml.Replace(dynamicDataPlaceholder, parameter.Value.ToString());
+        //            }
+        //        }
+        //    }
+
+        //    return fullHtml;
+        //}
     }
 }
