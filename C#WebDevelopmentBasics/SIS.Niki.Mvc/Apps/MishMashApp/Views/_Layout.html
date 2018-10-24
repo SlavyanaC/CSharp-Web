@@ -22,12 +22,24 @@
                         <li class="nav-item">
                             <a class="nav-link nav-link-white active" href="/">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link nav-link-white active" href="/users/login">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link nav-link-white active" href="/users/register">Register</a>
-                        </li>
+                        @if(User != null)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link nav-link-white active" href="/channels/followed">My Channels</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link nav-link-white active" href="/users/logout">Logout</a>
+                            </li>
+                        }
+                        @else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link nav-link-white active" href="/users/login">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link nav-link-white active" href="/users/register">Register</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </nav>
