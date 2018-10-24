@@ -33,12 +33,12 @@
             // TODO: unify this
             get
             {
-                if (!this.Request.Cookies.ContainsCookie(".auth-cakes"))
+                if (!this.Request.Cookies.ContainsCookie(".auth"))
                 {
                     return null;
                 }
 
-                var cookie = this.Request.Cookies.GetCookie(".auth-cakes");
+                var cookie = this.Request.Cookies.GetCookie(".auth");
                 var cookieContent = cookie.Value;
                 var userName = this.UserCookieService.GetUserData(cookieContent);
                 return userName;
@@ -105,7 +105,6 @@
         private string GetViewContent<T>(string viewName, T model, string layoutName = "_Layout")
         {
             // TODO: What if there are two views with the same name?
-
             var assemblyLocation = Assembly.GetEntryAssembly().Location;
             var rootDirectoryPath = assemblyLocation.Substring(0, assemblyLocation.LastIndexOf("\\"));
             var viewsDirectoryPath = rootDirectoryPath + "\\Views";
