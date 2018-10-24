@@ -110,7 +110,7 @@
             }
 
             var cookie = this.Request.Cookies.GetCookie(".auth");
-            cookie.Delete();
+            cookie.Expire();
             this.Response.Cookies.Add(cookie);
             return this.Redirect("/");
         }

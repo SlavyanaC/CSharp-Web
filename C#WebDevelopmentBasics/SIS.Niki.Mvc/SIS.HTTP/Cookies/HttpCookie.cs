@@ -38,7 +38,7 @@
 
         public bool IsHttpOnly { get; set; }
 
-        public void Delete()
+        public void Expire()
         {
             this.Expires = DateTime.UtcNow.AddDays(-1);
         }
