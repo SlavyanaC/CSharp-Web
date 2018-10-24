@@ -109,7 +109,7 @@ namespace MishMashWebApp.Migrations
             modelBuilder.Entity("MishMashWebApp.Models.UserChannel", b =>
                 {
                     b.HasOne("MishMashWebApp.Models.Channel", "Channel")
-                        .WithMany("UserChannels")
+                        .WithMany("Followers")
                         .HasForeignKey("ChannelId")
                         .OnDelete(DeleteBehavior.Cascade);
 

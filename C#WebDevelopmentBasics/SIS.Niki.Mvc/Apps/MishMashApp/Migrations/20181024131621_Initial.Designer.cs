@@ -9,7 +9,7 @@ using MishMashWebApp.Data;
 namespace MishMashWebApp.Migrations
 {
     [DbContext(typeof(MishMashDbContext))]
-    [Migration("20181024085742_Initial")]
+    [Migration("20181024131621_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -111,7 +111,7 @@ namespace MishMashWebApp.Migrations
             modelBuilder.Entity("MishMashWebApp.Models.UserChannel", b =>
                 {
                     b.HasOne("MishMashWebApp.Models.Channel", "Channel")
-                        .WithMany("UserChannels")
+                        .WithMany("Followers")
                         .HasForeignKey("ChannelId")
                         .OnDelete(DeleteBehavior.Cascade);
 

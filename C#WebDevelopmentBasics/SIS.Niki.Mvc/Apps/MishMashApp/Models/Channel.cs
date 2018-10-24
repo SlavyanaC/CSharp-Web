@@ -8,7 +8,7 @@
         public Channel()
         {
             this.Tags = new HashSet<ChannelTag>();
-            this.UserChannels = new HashSet<UserChannel>();
+            this.Followers = new HashSet<UserChannel>();
         }
 
         public int Id { get; set; }
@@ -21,6 +21,6 @@
 
         public virtual ICollection<ChannelTag> Tags { get; set; }
 
-        public virtual ICollection<UserChannel> UserChannels { get; set; }
+        public virtual ICollection<UserChannel> Followers { get; set; }
     }
 }
