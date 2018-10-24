@@ -96,7 +96,7 @@
 
             var cookieContent = this.UserCookieService.GetUserCookie(user.Username);
 
-            var cookie = new HttpCookie(".auth-cakes", cookieContent, 7) { IsHttpOnly = true };
+            var cookie = new HttpCookie(".auth", cookieContent, 7) { IsHttpOnly = true };
             this.Response.Cookies.Add(cookie);
             return this.Redirect("/");
         }
@@ -104,12 +104,12 @@
         [HttpGet("/account/logout")]
         public IHttpResponse Logout()
         {
-            if (!this.Request.Cookies.ContainsCookie(".auth-cakes"))
+            if (!this.Request.Cookies.ContainsCookie(".auth"))
             {
                 return this.Redirect("/");
             }
 
-            var cookie = this.Request.Cookies.GetCookie(".auth-cakes");
+            var cookie = this.Request.Cookies.GetCookie(".auth");
             cookie.Delete();
             this.Response.Cookies.Add(cookie);
             return this.Redirect("/");

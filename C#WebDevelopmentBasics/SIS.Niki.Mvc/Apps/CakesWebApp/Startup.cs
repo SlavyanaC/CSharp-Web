@@ -1,12 +1,12 @@
 ﻿namespace CakesWebApp
 {
-    using SIS.MvcFramework;
     using SIS.MvcFramework.Loggers;
     using SIS.MvcFramework.Loggers.Contracts;
     using SIS.MvcFramework.Services;
     using SIS.MvcFramework.Services.Contracts;
     using SIS.MvcFramework.ViewEngine;
     using SIS.MvcFramework.ViewEngine.Contracts;
+    using SIS.MvcFramework.Contracts;
 
     public class Startup : IMvcApplication
     {
