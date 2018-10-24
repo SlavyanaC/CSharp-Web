@@ -2,6 +2,7 @@
 {
     using System;
     using System.Linq;
+    using System.Collections.Generic;
 
     public static class ObjectMapper
     {
@@ -18,13 +19,20 @@
                 }
 
                 var sourceProperty = source.GetType().GetProperties()
-                   .FirstOrDefault(x => x.Name.ToLower() == destinationProperty.Name.ToLower());
-
+                    .FirstOrDefault(x => x.Name.ToLower() == destinationProperty.Name.ToLower());
                 if (sourceProperty?.GetMethod != null)
                 {
                     var sourceValue = sourceProperty.GetMethod.Invoke(source, new object[0]);
-                    var destinationValue = TryParse(sourceValue.ToString(), destinationProperty.PropertyType);
-                    destinationProperty.SetMethod.Invoke(destination, new[] { destinationValue });
+                    if (sourceValue is IEnumerable<object> || sourceValue is object[])
+                    {
+                        var destinationCollection = sourceValue;
+                        destinationProperty.SetMethod.Invoke(destination, new[] { destinationCollection });
+                    }
+                    else
+                    {
+                        var destinationValue = TryParse(sourceValue.ToString(), destinationProperty.PropertyType);
+                        destinationProperty.SetMethod.Invoke(destination, new[] { destinationValue });
+                    }
                 }
             }
             return destination;
@@ -38,40 +46,40 @@
             switch (typeCode)
             {
                 case TypeCode.Int32:
-                {
-                    if (int.TryParse(stringValue, out var parsedValue))
-                        value = parsedValue;
-                }
+                    {
+                        if (int.TryParse(stringValue, out var parsedValue))
+                            value = parsedValue;
+                    }
                     break;
                 case TypeCode.Char:
-                {
-                    if (char.TryParse(stringValue, out var parsedValue))
-                        value = parsedValue;
-                }
+                    {
+                        if (char.TryParse(stringValue, out var parsedValue))
+                            value = parsedValue;
+                    }
                     break;
                 case TypeCode.Int64:
-                {
-                    if (long.TryParse(stringValue, out var parsedValue))
-                        value = parsedValue;
-                }
+                    {
+                        if (long.TryParse(stringValue, out var parsedValue))
+                            value = parsedValue;
+                    }
                     break;
                 case TypeCode.Double:
-                {
-                    if (double.TryParse(stringValue, out var parsedValue))
-                        value = parsedValue;
-                }
+                    {
+                        if (double.TryParse(stringValue, out var parsedValue))
+                            value = parsedValue;
+                    }
                     break;
                 case TypeCode.Decimal:
-                {
-                    if (decimal.TryParse(stringValue, out var parsedValue))
-                        value = parsedValue;
-                }
+                    {
+                        if (decimal.TryParse(stringValue, out var parsedValue))
+                            value = parsedValue;
+                    }
                     break;
                 case TypeCode.DateTime:
-                {
-                    if (DateTime.TryParse(stringValue, out var parsedValue))
-                        value = parsedValue;
-                }
+                    {
+                        if (DateTime.TryParse(stringValue, out var parsedValue))
+                            value = parsedValue;
+                    }
                     break;
                 case TypeCode.String:
                     value = stringValue;
