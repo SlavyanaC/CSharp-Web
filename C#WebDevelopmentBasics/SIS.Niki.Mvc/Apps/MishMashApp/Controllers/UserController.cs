@@ -99,5 +99,19 @@
 
             return this.Redirect("/");
         }
+
+        [HttpGet("/users/logout")]
+        public IHttpResponse Logout()
+        {
+            if (!this.Request.Cookies.ContainsCookie(".auth"))
+            {
+                return this.Redirect("/");
+            }
+
+            var cookie = this.Request.Cookies.GetCookie(".auth");
+            cookie.Expire();;
+            this.Response.Cookies.Add(cookie);
+            return this.Redirect("/");
+        }
     }
 }
