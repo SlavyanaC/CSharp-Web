@@ -1,4 +1,7 @@
-﻿namespace SIS.MvcFramework
+﻿using SIS.MvcFramework.Loggers;
+using SIS.MvcFramework.Loggers.Contracts;
+
+namespace SIS.MvcFramework
 {
     using System;
     using System.Linq;
@@ -23,6 +26,11 @@
             CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
 
             var dependencyContainer = new ServiceCollection();
+
+            dependencyContainer.AddService<IHashService, HashService>();
+            dependencyContainer.AddService<IUserCookieService, UserCookieService>();
+            dependencyContainer.AddService<ILogger>(() => new FileLogger("log.txt"));
+
             application.ConfigureServices(dependencyContainer);
 
             var serverRoutingTable = new ServerRoutingTable();
