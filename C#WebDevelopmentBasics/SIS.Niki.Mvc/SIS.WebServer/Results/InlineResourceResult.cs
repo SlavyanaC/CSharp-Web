@@ -11,6 +11,8 @@
         {
             this.Headers.Add(new HttpHeader(HttpHeader.ContentLength, content.Length.ToString()));
             this.Headers.Add(new HttpHeader(HttpHeader.ContentDisposition, "inline"));
+            // TODO: Try with js
+            this.Headers.Add(new HttpHeader("Content-Type", "text/css; charset=uft-8"));
             this.Content = content;
         }
     }
