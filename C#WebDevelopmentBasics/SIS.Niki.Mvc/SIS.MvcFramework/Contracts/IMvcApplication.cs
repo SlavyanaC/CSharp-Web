@@ -1,6 +1,6 @@
-﻿namespace SIS.MvcFramework
+﻿namespace SIS.MvcFramework.Contracts
 {
-    using Services.Contracts;
+    using SIS.MvcFramework.Services.Contracts;
 
     public interface IMvcApplication
     {

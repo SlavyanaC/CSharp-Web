@@ -1,7 +1,4 @@
-﻿using SIS.MvcFramework.Loggers;
-using SIS.MvcFramework.Loggers.Contracts;
-
-namespace SIS.MvcFramework
+﻿namespace SIS.MvcFramework
 {
     using System;
     using System.Linq;
@@ -15,9 +12,12 @@ namespace SIS.MvcFramework
     using WebServer;
     using WebServer.Routing;
     using Attributes;
-    using Services;
     using Services.Contracts;
+    using Services;
     using Extensions;
+    using Contracts;
+    using Loggers.Contracts;
+    using Loggers;
 
     public static class WebHost
     {
@@ -46,8 +46,8 @@ namespace SIS.MvcFramework
             IMvcApplication application, IServiceCollection serviceCollection)
         {
             var controllers = application.GetType().Assembly.GetTypes()
-                .Where(myType => myType.IsClass 
-                                 && !myType.IsAbstract 
+                .Where(myType => myType.IsClass
+                                 && !myType.IsAbstract
                                  && myType.IsSubclassOf(typeof(Controller)));
 
             foreach (var controller in controllers)
