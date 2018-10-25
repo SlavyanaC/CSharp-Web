@@ -2,7 +2,7 @@
 {
     using Models.Enums;
 
-    public class FollowedChannelViewModel
+    public class ChannelViewModel
     {
         public int Id { get; set; }
 

@@ -1,23 +1,58 @@
-﻿<h1 class="text-center text-mishmash">Welcome, @User!</h1>
+﻿<h1 class="text-center text-mishmash">Welcome, @Model.Role - @User!</h1>
 <h2 class="text-mishmash">Your channels</h2>
 <hr class="bg-mishmash hr-2" />
 
 <div class="card-deck">
-    @foreach(var channel in Model)
+    @foreach(var channel in Model.FollowedChannels)
     {
-        <div class="card text-white bg-mishmash mb-3 text-center" style="min-width: 15rem; max-width: 18rem;">
-            <div>@channel.Name</div>
-            <hr class="hr-2 w-75" style="background-color: white"/>
-            <div>@channel.Type</div>
-            <hr class="hr-2 w-75" style="background-color: white"/>
-            <div>@channel.FollowersCount Followers</div>
-            <hr class="hr-2 w-75" style="background-color: white"/>
-            <div>Followed</div>
-        </div>
+    <div class="card text-white bg-mishmash mb-3 text-center" style="min-width: 17rem; max-width: 17rem;">
+        <div>@channel.Name</div>
+        <hr class="hr-2 w-75" style="background-color: white" />
+        <div>@channel.Type</div>
+        <hr class="hr-2 w-75" style="background-color: white" />
+        <div>@channel.FollowersCount Followers</div>
+        <hr class="hr-2 w-75" style="background-color: white" />
+        <div>Followed</div>
+    </div>
     }
 </div>
 <h2 class="text-mishmash">Suggested</h2>
 <hr class="bg-mishmash hr-2" />
-
+<div class="card-deck">
+    @foreach(var channel in Model.SuggestedChannels)
+    {
+    <div class="card text-white bg-mishmash mb-3 text-center" style="min-width: 17rem; max-width: 17rem;">
+        <div>@channel.Name</div>
+        <hr class="hr-2 w-75" style="background-color: white" />
+        <div>@channel.Type</div>
+        <hr class="hr-2 w-75" style="background-color: white" />
+        <div>@channel.FollowersCount Followers</div>
+        <hr class="hr-2 w-75" style="background-color: white" />
+        <div>
+            <a href="/channels/follow?id=@channel.Id" class="text-white">Follow</a>&nbsp; &nbsp
+            <a href="/channels/details?id=@channel.Id" class="text-white">Details</a>
+        </div>
+    </div>
+    }
+</div>
 <h2 class="text-mishmash">See Other</h2>
 <hr class="bg-mishmash hr-2" />
+<div class="card-deck">
+    @foreach(var channel in Model.SeeOtherChannelViewModels)
+    {
+    <div class="card text-white bg-mishmash mb-3 text-center" style="min-width: 17rem; max-width: 17rem;">
+        <div>@channel.Name</div>
+        <hr class="hr-2 w-75" style="background-color: white" />
+        <div>@channel.Type</div>
+        <hr class="hr-2 w-75" style="background-color: white" />
+        <div>@channel.FollowersCount Followers</div>
+        <hr class="hr-2 w-75" style="background-color: white" />
+        <div>
+            <a href="/channels/follow?id=@channel.Id" class="text-white">Follow</a>&nbsp; &nbsp
+            <a href="/channels/details?id=@channel.Id" class="text-white">Details</a>
+        </div>
+    </div>
+    }
+</div>
+<br />
+<br />

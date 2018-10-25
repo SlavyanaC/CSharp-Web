@@ -1,13 +1,11 @@
 ﻿namespace MishMashWebApp.Controllers
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
-    using MishMashWebApp.ViewModels.Channel;
-    using SIS.HTTP.Responses.Contracts;
-    using SIS.MvcFramework;
     using SIS.MvcFramework.Attributes;
+    using SIS.HTTP.Responses.Contracts;
+    using ViewModels.Channel;
+    using Models;
 
     public class ChannelController : BaseController
     {
@@ -21,7 +19,7 @@
 
             var followedChannels = this.DbContext.Channels
                 .Where(c => c.Followers.Any(f => f.User.Username == this.User))
-                .Select(c => new FollowedChannelViewModel()
+                .Select(c => new ChannelViewModel()
                 {
                     Id = c.Id,
                     Name = c.Name,
@@ -30,6 +28,40 @@
                 }).ToArray();
 
             return this.View("Followed", followedChannels);
+        }
+
+        [HttpGet("/channels/follow")]
+        public IHttpResponse Follow(int id)
+        {
+            var user = this.DbContext.Users.FirstOrDefault(u => u.Username == this.User);
+            if (user == null)
+            {
+                return this.Redirect("/users/login");
+            }
+
+            var channel = this.DbContext.Channels.FirstOrDefault(c => c.Id == id);
+            if (channel == null)
+            {
+                return this.BadRequestError($"Channel with id {id} not found.");
+            }
+
+            var userChannel = new UserChannel()
+            {
+                UserId = user.Id,
+                ChannelId = channel.Id,
+            };
+
+            this.DbContext.UserChannels.Add(userChannel);
+            try
+            {
+                this.DbContext.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                return this.ServerError(e.Message);
+            }
+
+            return this.Redirect("/");
         }
 
         [HttpGet("/channels/unfollow")]
