@@ -1,4 +1,12 @@
-﻿<h1 class="text-center text-mishmash">Welcome, @Model.Role - @User!</h1>
+﻿@if(@Model.Role.ToString() == "Admin")
+{
+    <h1 class="text-center text-mishmash">Welcome, Admin-@User!</h1>
+}
+@else
+{   
+    <h1 class="text-center text-mishmash">Welcome, User-@User!</h1>
+}
+
 <h2 class="text-mishmash">Your channels</h2>
 <hr class="bg-mishmash hr-2" />
 
