@@ -6,13 +6,15 @@
     using SIS.HTTP.Responses.Contracts;
     using ViewModels.Channel;
     using Models;
+    using Models.Enums;
 
     public class ChannelController : BaseController
     {
         [HttpGet("/channels/followed")]
         public IHttpResponse MyChannels()
         {
-            if (this.User == null)
+            var user = this.DbContext.Users.FirstOrDefault(u => u.Username == this.User);
+            if (user == null)
             {
                 return this.Redirect("/users/login");
             }
@@ -27,7 +29,8 @@
                     FollowersCount = c.Followers.Count(),
                 }).ToArray();
 
-            return this.View("Followed", followedChannels);
+            return user.Role == UserRole.Admin ? this.View("Followed", followedChannels, "_LayoutAdmin")
+                : this.View("Followed", followedChannels);
         }
 
         [HttpGet("/channels/follow")]
@@ -87,7 +90,8 @@
         [HttpGet("/channels/details")]
         public IHttpResponse Details(int id)
         {
-            if (this.User == null)
+            var user = this.DbContext.Users.FirstOrDefault(u => u.Username == this.User);
+            if (user == null)
             {
                 return this.Redirect("/users/login");
             }
@@ -103,7 +107,82 @@
 
                 }).FirstOrDefault();
 
-            return this.View("Details", channelViewModel);
+
+            return user.Role == UserRole.Admin ? this.View("Details", channelViewModel, "_LayoutAdmin")
+                : this.View("Details", channelViewModel);
+        }
+
+        [HttpGet("/channels/create")]
+        public IHttpResponse Create()
+        {
+            var user = this.DbContext.Users.FirstOrDefault(u => u.Username == this.User && u.Role == UserRole.Admin);
+            if (user == null)
+            {
+                return this.BadRequestError("You have no permission to access this page.");
+            }
+
+            return this.View("Create", "_LayoutAdmin");
+        }
+
+        [HttpPost("/channels/create")]
+        public IHttpResponse Create(CreateChannelViewModel model)
+        {
+            if (model.Name == null)
+            {
+                return this.BadRequestError("A channel must have name.");
+            }
+
+            if (!Enum.TryParse(model.Type, out ChannelType type))
+            {
+                return this.BadRequestError("Please select channel type.");
+            }
+
+            var channel = new Channel()
+            {
+                Name = model.Name,
+                Type = type,
+                Description = model.Description,
+            };
+
+            if (!string.IsNullOrWhiteSpace(model.Tags))
+            {
+                var tags = model.Tags
+                    .Split(new[] { ';', ',', ' ', }, StringSplitOptions.RemoveEmptyEntries)
+                    .ToArray();
+
+                foreach (var tagName in tags)
+                {
+                    var tag = this.DbContext.Tags.FirstOrDefault(t => t.Name == tagName);
+                    if (tag == null)
+                    {
+                        tag = new Tag() { Name = tagName.Trim() };
+                        this.DbContext.Tags.Add(tag);
+                        try
+                        {
+                            this.DbContext.SaveChanges();
+                        }
+                        catch (Exception e)
+                        {
+                            return this.ServerError(e.Message);
+                        }
+                    }
+
+                    channel.Tags.Add(new ChannelTag() { TagId = tag.Id });
+                }
+            }
+
+            this.DbContext.Channels.Add(channel);
+
+            try
+            {
+                this.DbContext.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                return this.ServerError(e.Message);
+            }
+
+            return this.Redirect("/channels/details?id=" + channel.Id);
         }
     }
 }

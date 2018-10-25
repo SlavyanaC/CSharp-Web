@@ -23,6 +23,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Views\Channel\Create.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Views\Channel\Details.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
