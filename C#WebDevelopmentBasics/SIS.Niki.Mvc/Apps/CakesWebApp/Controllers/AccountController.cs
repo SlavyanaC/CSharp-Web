@@ -1,4 +1,6 @@
-﻿namespace CakesWebApp.Controllers
+﻿using SIS.MvcFramework;
+
+namespace CakesWebApp.Controllers
 {
     using System;
     using System.Linq;
@@ -94,7 +96,11 @@
                 return this.BadRequestError("Invalid username or password.");
             }
 
-            var cookieContent = this.UserCookieService.GetUserCookie(user.Username);
+            var mvcUser = new MvcUserInfo
+            {
+                Username = user.Username,
+            };
+            var cookieContent = this.UserCookieService.GetUserCookie(mvcUser);
 
             var cookie = new HttpCookie(".auth", cookieContent, 7) { IsHttpOnly = true };
             this.Response.Cookies.Add(cookie);

@@ -10,7 +10,7 @@
         [HttpGet("/user/profile")]
         public IHttpResponse Profile()
         {
-            var viewModel = this.Db.Users.Where(u => u.Username == this.User)
+            var viewModel = this.Db.Users.Where(u => u.Username == this.User.Username)
                 .Select(u => new ProfileViewModel
                 {
                     Username = u.Username,
