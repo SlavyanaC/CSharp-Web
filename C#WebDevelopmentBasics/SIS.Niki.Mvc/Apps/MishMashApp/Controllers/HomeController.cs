@@ -2,7 +2,6 @@
 {
     using System.Linq;
     using SIS.HTTP.Responses.Contracts;
-    using SIS.MvcFramework.Attributes;
     using ViewModels.Channel;
     using Models;
     using Models.Enums;
@@ -10,7 +9,6 @@
 
     public class HomeController : BaseController
     {
-        [HttpGet]
         public IHttpResponse Index()
         {
             var user = this.DbContext.Users.FirstOrDefault(u => u.Username == this.User);

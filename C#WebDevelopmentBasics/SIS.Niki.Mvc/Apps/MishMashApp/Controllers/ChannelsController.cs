@@ -10,7 +10,6 @@
 
     public class ChannelsController : BaseController
     {
-        [HttpGet]
         public IHttpResponse Followed()
         {
             var user = this.DbContext.Users.FirstOrDefault(u => u.Username == this.User);
@@ -33,7 +32,6 @@
                 : this.View("Followed", followedChannels);
         }
 
-        [HttpGet]
         public IHttpResponse Follow(int id)
         {
             var user = this.DbContext.Users.FirstOrDefault(u => u.Username == this.User);
@@ -67,7 +65,6 @@
             return this.Redirect("/");
         }
 
-        [HttpGet]
         public IHttpResponse Unfollow(int id)
         {
             if (this.User == null)
@@ -87,7 +84,6 @@
             return this.Redirect("/channels/followed");
         }
 
-        [HttpGet]
         public IHttpResponse Details(int id)
         {
             var user = this.DbContext.Users.FirstOrDefault(u => u.Username == this.User);
@@ -112,7 +108,6 @@
                 : this.View("Details", channelViewModel);
         }
 
-        [HttpGet]
         public IHttpResponse Create()
         {
             var user = this.DbContext.Users.FirstOrDefault(u => u.Username == this.User && u.Role == UserRole.Admin);

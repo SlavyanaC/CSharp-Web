@@ -52,25 +52,20 @@
 
             foreach (var controller in controllers)
             {
-                var getMethods = controller.GetMethods(BindingFlags.Public | BindingFlags.Instance).Where(
-                    method => method.CustomAttributes.Any(
-                        ca => ca.AttributeType.IsSubclassOf(typeof(HttpAttribute))));
+                var controllerActions = controller.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 
-                foreach (var methodInfo in getMethods)
+                foreach (var methodInfo in controllerActions)
                 {
-                    var httpAttribute = (HttpAttribute)methodInfo.GetCustomAttributes(true)
-                        .FirstOrDefault(ca =>
-                            ca.GetType().IsSubclassOf(typeof(HttpAttribute)));
+                    var httpAttribute = (HttpAttribute)methodInfo.GetCustomAttributes(true).FirstOrDefault(ca => ca.GetType().IsSubclassOf(typeof(HttpAttribute)));
 
-                    if (httpAttribute == null)
+                    var method = HttpRequestMethod.GET;
+                    string path = null;
+                    if (httpAttribute != null)
                     {
-                        // TODO: Assume HttpGet
-                        continue;
+                        method = httpAttribute.Method;
+                        path = httpAttribute.Path;
                     }
 
-                    var method = httpAttribute.Method;
-
-                    var path = httpAttribute.Path;
                     if (path == null)
                     {
                         var controllerName = controller.Name;
