@@ -37,7 +37,7 @@
             var channel = this.DbContext.Channels.FirstOrDefault(c => c.Id == id);
             if (channel == null)
             {
-                return this.BadRequestError($"Channel with id {id} not found.");
+                return this.BadRequestErrorWithView($"Channel with id {id} not found.");
             }
 
             var userChannel = new UserChannel()
@@ -65,7 +65,7 @@
            var userChannel = this.DbContext.UserChannels.FirstOrDefault(uc => uc.User.Username == this.User && uc.ChannelId == id);
             if (userChannel == null)
             {
-                return this.BadRequestError("You are not following this channel.");
+                return this.BadRequestErrorWithView("You are not following this channel.");
             }
 
             this.DbContext.UserChannels.Remove(userChannel);
@@ -90,6 +90,10 @@
 
                 }).FirstOrDefault();
 
+            if (channelViewModel == null)
+            {
+                return this.BadRequestError("Invalid channel id.");
+            }
 
             return user.Role == UserRole.Admin ? this.View(channelViewModel, "_LayoutAdmin")
                 : this.View(channelViewModel);
@@ -101,7 +105,7 @@
             var user = this.DbContext.Users.FirstOrDefault(u => u.Username == this.User);
             if (user.Role != UserRole.Admin)
             {
-                return this.BadRequestError("You have no permission to access this page.");
+                return Redirect("/");
             }
 
             return this.View(layoutName: "_LayoutAdmin");
@@ -114,17 +118,17 @@
             var user = this.DbContext.Users.FirstOrDefault(u => u.Username == this.User);
             if (user.Role != UserRole.Admin)
             {
-                return this.BadRequestError("You have no permission to access this page.");
+                return this.BadRequestErrorWithView("You have no permission to access this page.");
             }
 
             if (model.Name == null)
             {
-                return this.BadRequestError("A channel must have name.");
+                return this.BadRequestErrorWithView("A channel must have name.");
             }
 
             if (!Enum.TryParse(model.Type, out ChannelType type))
             {
-                return this.BadRequestError("Please select channel type.");
+                return this.BadRequestErrorWithView("Please select channel type.");
             }
 
             var channel = new Channel()

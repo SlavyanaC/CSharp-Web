@@ -30,22 +30,22 @@
         {
             if (string.IsNullOrWhiteSpace(model.Username) || model.Username.Trim().Length < 4)
             {
-                return this.BadRequestError("Please provide valid username with length of 4 or more characters.");
+                return this.BadRequestErrorWithView("Please provide valid username with length of 4 or more characters.");
             }
 
             if (this.DbContext.Users.Any(x => x.Username == model.Username.Trim()))
             {
-                return this.BadRequestError("User with the same name already exists.");
+                return this.BadRequestErrorWithView("User with the same name already exists.");
             }
 
             if (string.IsNullOrWhiteSpace(model.Password) || model.Password.Length < 6)
             {
-                return this.BadRequestError("Please provide password of length 6 or more.");
+                return this.BadRequestErrorWithView("Please provide password of length 6 or more.");
             }
 
             if (model.Password != model.ConfirmPassword)
             {
-                return this.BadRequestError("Passwords do not match.");
+                return this.BadRequestErrorWithView("Passwords do not match.");
             }
 
             var hashedPassword = this.hashService.Hash(model.Password);
@@ -88,7 +88,7 @@
 
             if (user == null)
             {
-                return this.BadRequestError("Invalid username or password");
+                return this.BadRequestErrorWithView("Invalid username or password.");
             }
 
             var cookieContent = this.UserCookieService.GetUserCookie(user.Username);
