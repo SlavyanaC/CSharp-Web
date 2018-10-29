@@ -31,20 +31,27 @@
 
         public IUserCookieService UserCookieService { get; internal set; }
 
-        protected string User => GetUserData(this.Request.Cookies, this.UserCookieService);
+        protected MvcUserInfo User => GetUserData(this.Request.Cookies, this.UserCookieService);
 
-        public static string GetUserData(IHttpCookieCollection cookieCollection,
+        public static MvcUserInfo GetUserData(IHttpCookieCollection cookieCollection,
             IUserCookieService userCookieService)
         {
             if (!cookieCollection.ContainsCookie(".auth"))
             {
-                return null;
+                return new MvcUserInfo();
             }
 
             var cookie = cookieCollection.GetCookie(".auth");
             var cookieContent = cookie.Value;
-            var userName = userCookieService.GetUserData(cookieContent);
-            return userName;
+            try
+            {
+                var userName = userCookieService.GetUserData(cookieContent);
+                return userName;
+            }
+            catch (Exception)
+            {
+                return new MvcUserInfo();
+            }
         }
 
         protected IHttpResponse View(string viewName = null, string layoutName = "_Layout")
