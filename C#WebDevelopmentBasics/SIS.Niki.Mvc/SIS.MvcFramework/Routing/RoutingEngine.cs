@@ -73,12 +73,12 @@
         private static void RegisterDefaultRoute(ServerRoutingTable routingTable)
         {
             if (!routingTable.Routes[HttpRequestMethod.GET].ContainsKey("/")
-                && routingTable.Routes[HttpRequestMethod.GET].ContainsKey("/Home/Index"))
+                && routingTable.Routes[HttpRequestMethod.GET].ContainsKey("/home/index"))
             {
                 routingTable.Routes[HttpRequestMethod.GET]["/"] = (request) =>
-                    routingTable.Routes[HttpRequestMethod.GET]["/Home/Index"](request);
+                    routingTable.Routes[HttpRequestMethod.GET]["/home/index"](request);
 
-                Console.WriteLine($"Route registered: reuse /Home/Index => {HttpRequestMethod.GET} => /");
+                Console.WriteLine($"Route registered: reuse /home/index => {HttpRequestMethod.GET} => /");
             }
         }
 
@@ -117,7 +117,7 @@
 
                         var actionName = methodInfo.Name;
 
-                        path = $"/{controllerName}/{actionName}";
+                        path = $"/{controllerName.ToLower()}/{actionName.ToLower()}";
                     }
                     else if (!path.StartsWith("/"))
                     {

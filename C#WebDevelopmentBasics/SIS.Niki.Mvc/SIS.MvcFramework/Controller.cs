@@ -1,4 +1,7 @@
-﻿namespace SIS.MvcFramework
+﻿using System;
+using SIS.HTTP.Extensions;
+
+namespace SIS.MvcFramework
 {
     using System.Linq;
     using System.Reflection;
@@ -44,16 +47,29 @@
             }
         }
 
-        protected IHttpResponse View(string viewName, string layoutName = "_Layout")
+        protected IHttpResponse View(string viewName = null, string layoutName = "_Layout")
         {
-            var allContent = this.GetViewContent(viewName, (object)null, layoutName);
-            this.PrepareHtmlResult(allContent);
-            return this.Response;
+            return this.View(viewName, (object)null, layoutName);
         }
 
-        protected IHttpResponse View<T>(string viewName, T model = null, string layoutName = "_Layout")
+        protected IHttpResponse View<T>(T model = null, string layoutName = "_Layout")
             where T : class
         {
+            return this.View(null, model, layoutName);
+        }
+
+        protected IHttpResponse View<T>(string viewName = null, T model = null, string layoutName = "_Layout")
+            where T : class
+        {
+            if (viewName == null)
+            {
+                viewName = this.Request.Path.Trim('/', '\\');
+                if (string.IsNullOrWhiteSpace(viewName))
+                {
+                    viewName = "Home/Index";
+                }
+            }
+
             var allContent = this.GetViewContent(viewName, model, layoutName);
             this.PrepareHtmlResult(allContent);
             return this.Response;
@@ -103,14 +119,15 @@
 
         private string GetViewContent<T>(string viewName, T model, string layoutName = "_Layout")
         {
-            // TODO: What if there are two views with the same name?
-            var assemblyLocation = Assembly.GetEntryAssembly().Location;
-            var rootDirectoryPath = assemblyLocation.Substring(0, assemblyLocation.LastIndexOf("\\"));
-            var viewsDirectoryPath = rootDirectoryPath + "\\Views";
+            viewName = viewName.Contains("/") ? viewName.Substring(viewName.LastIndexOf('/') + 1).Capitalize() : viewName;
+
+            var assemblyLocation = Assembly.GetEntryAssembly().Location.Replace('\\', '/');
+            var rootDirectoryPath = assemblyLocation.Replace('\\', '/').Substring(0, assemblyLocation.LastIndexOf('/'));
+            var viewsDirectoryPath = rootDirectoryPath + "/Views";
 
             var viewsDirectoryFiles = SIO.Directory.GetFiles(viewsDirectoryPath);
             var content = string.Empty;
-            if (viewsDirectoryFiles.Any(f => f.EndsWith(viewName + ".html")))
+            if (viewsDirectoryFiles.Any(f => f.EndsWith(viewName + ".html", StringComparison.OrdinalIgnoreCase)))
             {
                 content = this.ViewEngine.GetHtml(viewName, SIO.File.ReadAllText("Views/" + viewName + ".html"), model,
                    this.User);
@@ -120,7 +137,7 @@
                 var subDirectories = SIO.Directory.GetDirectories(viewsDirectoryPath);
                 foreach (var subDirectory in subDirectories)
                 {
-                    var directoryName = subDirectory.Substring(subDirectory.LastIndexOf("\\") + 1);
+                    var directoryName = subDirectory.Substring(subDirectory.LastIndexOf('\\') + 1);
                     var subDirectoryFiles = SIO.Directory.GetFiles(subDirectory);
                     if (subDirectoryFiles.Any(f => f.EndsWith(viewName + ".html")))
                     {
