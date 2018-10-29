@@ -28,8 +28,8 @@
                     FollowersCount = c.Followers.Count(),
                 }).ToArray();
 
-            return user.Role == UserRole.Admin ? this.View("Followed", followedChannels, "_LayoutAdmin")
-                : this.View("Followed", followedChannels);
+            return user.Role == UserRole.Admin ? this.View(followedChannels, "_LayoutAdmin")
+                : this.View(followedChannels);
         }
 
         public IHttpResponse Follow(int id)
@@ -104,8 +104,8 @@
                 }).FirstOrDefault();
 
 
-            return user.Role == UserRole.Admin ? this.View("Details", channelViewModel, "_LayoutAdmin")
-                : this.View("Details", channelViewModel);
+            return user.Role == UserRole.Admin ? this.View(channelViewModel, "_LayoutAdmin")
+                : this.View(channelViewModel);
         }
 
         public IHttpResponse Create()
@@ -116,7 +116,7 @@
                 return this.BadRequestError("You have no permission to access this page.");
             }
 
-            return this.View("Create", "_LayoutAdmin");
+            return this.View(layoutName: "_LayoutAdmin");
         }
 
         [HttpPost]

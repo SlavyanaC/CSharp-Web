@@ -19,7 +19,7 @@
                     : this.View("UserHomeIndex", loggedInUserHomeViewModel);
             }
 
-            return this.View("HomeIndex");
+            return this.View();
         }
 
         private LoggedInUserHomeViewModel GetLoggedInUserHomeViewModel(User user)

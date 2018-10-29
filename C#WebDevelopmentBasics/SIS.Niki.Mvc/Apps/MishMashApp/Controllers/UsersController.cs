@@ -22,7 +22,7 @@
 
         public IHttpResponse Register()
         {
-            return this.View("Register");
+            return this.View();
         }
 
         [HttpPost]
