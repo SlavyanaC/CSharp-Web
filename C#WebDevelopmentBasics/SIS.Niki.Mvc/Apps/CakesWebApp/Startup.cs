@@ -7,11 +7,13 @@
     using SIS.MvcFramework.ViewEngine;
     using SIS.MvcFramework.ViewEngine.Contracts;
     using SIS.MvcFramework.Contracts;
+    using SIS.MvcFramework;
 
     public class Startup : IMvcApplication
     {
-        public void Configure()
+        public MvcFrameworkSettings Configure()
         {
+            return new MvcFrameworkSettings();
         }
 
         public void ConfigureServices(IServiceCollection collection)
