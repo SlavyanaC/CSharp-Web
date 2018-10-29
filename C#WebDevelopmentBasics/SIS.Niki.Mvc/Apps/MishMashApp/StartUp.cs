@@ -4,11 +4,13 @@
     using SIS.MvcFramework.Services.Contracts;
     using SIS.MvcFramework.Loggers;
     using SIS.MvcFramework.Loggers.Contracts;
+    using SIS.MvcFramework;
 
     public class Startup : IMvcApplication
     {
-        public void Configure()
+        public MvcFrameworkSettings Configure()
         {
+            return new MvcFrameworkSettings();
         }
 
         public void ConfigureServices(IServiceCollection collection)
