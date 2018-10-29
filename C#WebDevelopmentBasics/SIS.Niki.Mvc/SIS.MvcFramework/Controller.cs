@@ -1,12 +1,12 @@
-﻿using System;
-using SIS.HTTP.Extensions;
-
-namespace SIS.MvcFramework
+﻿namespace SIS.MvcFramework
 {
+    using System;
     using System.Linq;
     using System.Reflection;
     using System.Text;
     using SIO = System.IO;
+    using HTTP.Extensions;
+    using HTTP.Cookies.Contracts;
     using HTTP.Headers;
     using HTTP.Responses;
     using HTTP.Enums;
@@ -31,20 +31,20 @@ namespace SIS.MvcFramework
 
         public IUserCookieService UserCookieService { get; internal set; }
 
-        protected string User
-        {
-            get
-            {
-                if (!this.Request.Cookies.ContainsCookie(".auth"))
-                {
-                    return null;
-                }
+        protected string User => GetUserData(this.Request.Cookies, this.UserCookieService);
 
-                var cookie = this.Request.Cookies.GetCookie(".auth");
-                var cookieContent = cookie.Value;
-                var userName = this.UserCookieService.GetUserData(cookieContent);
-                return userName;
+        public static string GetUserData(IHttpCookieCollection cookieCollection,
+            IUserCookieService userCookieService)
+        {
+            if (!cookieCollection.ContainsCookie(".auth"))
+            {
+                return null;
             }
+
+            var cookie = cookieCollection.GetCookie(".auth");
+            var cookieContent = cookie.Value;
+            var userName = userCookieService.GetUserData(cookieContent);
+            return userName;
         }
 
         protected IHttpResponse View(string viewName = null, string layoutName = "_Layout")

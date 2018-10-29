@@ -1,4 +1,7 @@
-﻿namespace SIS.MvcFramework.Routing
+﻿using SIS.HTTP.Headers;
+using SIS.HTTP.Responses;
+
+namespace SIS.MvcFramework.Routing
 {
     using System;
     using System.Collections.Generic;
@@ -20,7 +23,7 @@
         public void RegisterRoutes(ServerRoutingTable routingTable, IMvcApplication application, MvcFrameworkSettings settings, IServiceCollection serviceCollection)
         {
             RegisterStaticFiles(routingTable, settings);
-            RegisterActions(routingTable, application, serviceCollection);
+            RegisterActions(routingTable, application, settings, serviceCollection);
             RegisterDefaultRoute(routingTable);
         }
 
@@ -82,17 +85,17 @@
             }
         }
 
-        private static void RegisterActions(ServerRoutingTable routingTable, IMvcApplication application,
-            IServiceCollection serviceCollection)
+        private static void RegisterActions(ServerRoutingTable routingTable, IMvcApplication application, MvcFrameworkSettings settings, IServiceCollection serviceCollection)
         {
+            var userCookieService = serviceCollection.CreateInstance<IUserCookieService>();
             var controllers = application.GetType().Assembly.GetTypes()
                 .Where(myType => myType.IsClass
                                  && !myType.IsAbstract
                                  && myType.IsSubclassOf(typeof(Controller)));
+
             foreach (var controller in controllers)
             {
-                var getMethods = controller
-                    .GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+                var getMethods = controller.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 
                 foreach (var methodInfo in getMethods)
                 {
@@ -124,8 +127,25 @@
                         path = "/" + path;
                     }
 
+                    var hasAuthorizeAttribute = methodInfo.GetCustomAttributes(true).Any(ca => ca.GetType() == typeof(AuthorizeAttribute));
+
                     routingTable.Add(method, path,
-                        (request) => ExecuteAction(controller, methodInfo, request, serviceCollection));
+                        (request) =>
+                        {
+                            if (hasAuthorizeAttribute)
+                            {
+                                var userData = Controller.GetUserData(request.Cookies, userCookieService);
+                                if (userData == null)
+                                {
+                                    var response = new HttpResponse();
+                                    response.Headers.Add(new HttpHeader(HttpHeader.Location, settings.LoginPageUrl));
+                                    response.StatusCode = HttpResponseStatusCode.SeeOther;
+                                    return response;
+                                }
+                            }
+                          return ExecuteAction(controller, methodInfo, request, serviceCollection);
+                    });
+
                     Console.WriteLine($"Route registered: {controller.Name}.{methodInfo.Name} => {method} => {path}");
                 }
             }

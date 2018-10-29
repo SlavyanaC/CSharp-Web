@@ -10,13 +10,10 @@
 
     public class ChannelsController : BaseController
     {
+        [Authorize]
         public IHttpResponse Followed()
         {
             var user = this.DbContext.Users.FirstOrDefault(u => u.Username == this.User);
-            if (user == null)
-            {
-                return this.Redirect("/users/login");
-            }
 
             var followedChannels = this.DbContext.Channels
                 .Where(c => c.Followers.Any(f => f.User.Username == this.User))
@@ -32,14 +29,11 @@
                 : this.View(followedChannels);
         }
 
+        [Authorize]
         public IHttpResponse Follow(int id)
         {
             var user = this.DbContext.Users.FirstOrDefault(u => u.Username == this.User);
-            if (user == null)
-            {
-                return this.Redirect("/users/login");
-            }
-
+          
             var channel = this.DbContext.Channels.FirstOrDefault(c => c.Id == id);
             if (channel == null)
             {
@@ -65,14 +59,10 @@
             return this.Redirect("/");
         }
 
+        [Authorize]
         public IHttpResponse Unfollow(int id)
         {
-            if (this.User == null)
-            {
-                return this.Redirect("/users/login");
-            }
-
-            var userChannel = this.DbContext.UserChannels.FirstOrDefault(uc => uc.User.Username == this.User && uc.ChannelId == id);
+           var userChannel = this.DbContext.UserChannels.FirstOrDefault(uc => uc.User.Username == this.User && uc.ChannelId == id);
             if (userChannel == null)
             {
                 return this.BadRequestError("You are not following this channel.");
@@ -84,14 +74,11 @@
             return this.Redirect("/channels/followed");
         }
 
+        [Authorize]
         public IHttpResponse Details(int id)
         {
             var user = this.DbContext.Users.FirstOrDefault(u => u.Username == this.User);
-            if (user == null)
-            {
-                return this.Redirect("/users/login");
-            }
-
+           
             var channelViewModel = this.DbContext.Channels.Where(c => c.Id == id)
                 .Select(c => new ChannelDetailsViewModel()
                 {
@@ -108,10 +95,11 @@
                 : this.View(channelViewModel);
         }
 
+        [Authorize]
         public IHttpResponse Create()
         {
-            var user = this.DbContext.Users.FirstOrDefault(u => u.Username == this.User && u.Role == UserRole.Admin);
-            if (user == null)
+            var user = this.DbContext.Users.FirstOrDefault(u => u.Username == this.User);
+            if (user.Role != UserRole.Admin)
             {
                 return this.BadRequestError("You have no permission to access this page.");
             }
@@ -120,8 +108,15 @@
         }
 
         [HttpPost]
+        [Authorize]
         public IHttpResponse Create(CreateChannelViewModel model)
         {
+            var user = this.DbContext.Users.FirstOrDefault(u => u.Username == this.User);
+            if (user.Role != UserRole.Admin)
+            {
+                return this.BadRequestError("You have no permission to access this page.");
+            }
+
             if (model.Name == null)
             {
                 return this.BadRequestError("A channel must have name.");
