@@ -11,22 +11,22 @@
     using Models.Enums;
     using ViewModels.User;
 
-    public class UserController : BaseController
+    public class UsersController : BaseController
     {
         private readonly IHashService hashService;
 
-        public UserController(IHashService hashService)
+        public UsersController(IHashService hashService)
         {
             this.hashService = hashService;
         }
 
-        [HttpGet("/users/register")]
+        [HttpGet]
         public IHttpResponse Register()
         {
             return this.View("Register");
         }
 
-        [HttpPost("/users/register")]
+        [HttpPost]
         public IHttpResponse Register(RegisterUserViewModel model)
         {
             if (string.IsNullOrWhiteSpace(model.Username) || model.Username.Trim().Length < 4)
@@ -75,13 +75,13 @@
             return this.Redirect("/users/login");
         }
 
-        [HttpGet("users/login")]
+        [HttpGet]
         public IHttpResponse Login()
         {
             return this.View("Login");
         }
 
-        [HttpPost("/users/login")]
+        [HttpPost]
         public IHttpResponse Login(LoginUserViewModel model)
         {
             var hashedPassword = this.hashService.Hash(model.Password);
@@ -100,7 +100,7 @@
             return this.Redirect("/");
         }
 
-        [HttpGet("/users/logout")]
+        [HttpGet]
         public IHttpResponse Logout()
         {
             if (!this.Request.Cookies.ContainsCookie(".auth"))

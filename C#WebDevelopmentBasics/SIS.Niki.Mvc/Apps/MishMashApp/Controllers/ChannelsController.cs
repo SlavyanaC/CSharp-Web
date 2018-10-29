@@ -8,10 +8,10 @@
     using Models;
     using Models.Enums;
 
-    public class ChannelController : BaseController
+    public class ChannelsController : BaseController
     {
-        [HttpGet("/channels/followed")]
-        public IHttpResponse MyChannels()
+        [HttpGet]
+        public IHttpResponse Followed()
         {
             var user = this.DbContext.Users.FirstOrDefault(u => u.Username == this.User);
             if (user == null)
@@ -33,7 +33,7 @@
                 : this.View("Followed", followedChannels);
         }
 
-        [HttpGet("/channels/follow")]
+        [HttpGet]
         public IHttpResponse Follow(int id)
         {
             var user = this.DbContext.Users.FirstOrDefault(u => u.Username == this.User);
@@ -67,7 +67,7 @@
             return this.Redirect("/");
         }
 
-        [HttpGet("/channels/unfollow")]
+        [HttpGet]
         public IHttpResponse Unfollow(int id)
         {
             if (this.User == null)
@@ -87,7 +87,7 @@
             return this.Redirect("/channels/followed");
         }
 
-        [HttpGet("/channels/details")]
+        [HttpGet]
         public IHttpResponse Details(int id)
         {
             var user = this.DbContext.Users.FirstOrDefault(u => u.Username == this.User);
@@ -112,7 +112,7 @@
                 : this.View("Details", channelViewModel);
         }
 
-        [HttpGet("/channels/create")]
+        [HttpGet]
         public IHttpResponse Create()
         {
             var user = this.DbContext.Users.FirstOrDefault(u => u.Username == this.User && u.Role == UserRole.Admin);
@@ -124,7 +124,7 @@
             return this.View("Create", "_LayoutAdmin");
         }
 
-        [HttpPost("/channels/create")]
+        [HttpPost]
         public IHttpResponse Create(CreateChannelViewModel model)
         {
             if (model.Name == null)

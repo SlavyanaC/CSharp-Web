@@ -4,7 +4,7 @@
 
     public class HttpPostAttribute : HttpAttribute
     {
-        public HttpPostAttribute(string path)
+        public HttpPostAttribute(string path = null)
             : base(path) { }
 
         public override HttpRequestMethod Method => HttpRequestMethod.POST;

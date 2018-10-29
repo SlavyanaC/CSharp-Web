@@ -99,7 +99,8 @@
 
         private IHttpResponse HandleRequest(IHttpRequest httpRequest)
         {
-            if (!this.serverRoutingTable.Routes.ContainsKey(httpRequest.RequestMethod) || !this.serverRoutingTable.Routes[httpRequest.RequestMethod].ContainsKey(httpRequest.Path))
+            if (!this.serverRoutingTable.Routes.ContainsKey(httpRequest.RequestMethod) || 
+                !this.serverRoutingTable.Routes[httpRequest.RequestMethod].ContainsKey(httpRequest.Path))
             {
                 return this.ReturnIfResource(httpRequest.RequestMethod.ToString(), httpRequest.Path);
             }
@@ -114,7 +115,7 @@
 
             if (!resoureExtentions.Contains(fileExtension))
             {
-                return new TextResult($"Route with method {requestMethod} and path \"{httpRequestPath}\" not fount.", HttpResponseStatusCode.NotFound);
+                return new TextResult($"Route with method {requestMethod} and path \"{httpRequestPath}\" not found.", HttpResponseStatusCode.NotFound);
             }
 
             var pathToSearch = RESOURCES_DIRECTORY_RELATIVE_PATH +

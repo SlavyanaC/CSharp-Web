@@ -30,7 +30,6 @@
 
         protected string User
         {
-            // TODO: unify this
             get
             {
                 if (!this.Request.Cookies.ContainsCookie(".auth"))

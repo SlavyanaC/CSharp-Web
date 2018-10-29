@@ -34,7 +34,7 @@
             application.ConfigureServices(dependencyContainer);
 
             var serverRoutingTable = new ServerRoutingTable();
-            AutoRegisterRoutes(serverRoutingTable, application, dependencyContainer);
+            RegisterRoutes(serverRoutingTable, application, dependencyContainer);
 
             application.Configure();
 
@@ -42,7 +42,7 @@
             server.Run();
         }
 
-        private static void AutoRegisterRoutes(ServerRoutingTable routingTable,
+        private static void RegisterRoutes(ServerRoutingTable routingTable,
             IMvcApplication application, IServiceCollection serviceCollection)
         {
             var controllers = application.GetType().Assembly.GetTypes()
@@ -64,19 +64,42 @@
 
                     if (httpAttribute == null)
                     {
+                        // TODO: Assume HttpGet
                         continue;
                     }
 
+                    var method = httpAttribute.Method;
+
                     var path = httpAttribute.Path;
-                    if (!path.StartsWith("/"))
+                    if (path == null)
+                    {
+                        var controllerName = controller.Name;
+                        if (controllerName.EndsWith("Controller"))
+                        {
+                            controllerName = controllerName.Substring(0, controllerName.Length - "Controller".Length);
+                        }
+
+                        var actionName = methodInfo.Name;
+
+                        path = $"/{controllerName.ToLower()}/{actionName.ToLower()}";
+                    }
+                    else if (!path.StartsWith("/"))
                     {
                         path = "/" + path;
                     }
 
-                    routingTable.Add(httpAttribute.Method, path, (request) => ExecuteAction(controller, methodInfo, request, serviceCollection));
+                    routingTable.Add(method, path, (request) => ExecuteAction(controller, methodInfo, request, serviceCollection));
 
-                    Console.WriteLine($"Route registered: {controller.Name}.{methodInfo.Name} => {httpAttribute.Method} => {httpAttribute.Path}");
+                    Console.WriteLine($"Route registered: {controller.Name}.{methodInfo.Name} => {method} => {path}");
                 }
+            }
+
+            if (!routingTable.Routes[HttpRequestMethod.GET].ContainsKey("/") && routingTable.Routes[HttpRequestMethod.GET].ContainsKey("/home/index"))
+            {
+                routingTable.Routes[HttpRequestMethod.GET]["/"] = (request) =>
+                    routingTable.Routes[HttpRequestMethod.GET]["/home/index"](request);
+
+                Console.WriteLine($"Route registered: reuse /home/index => {HttpRequestMethod.GET} => /");
             }
         }
 

@@ -10,13 +10,7 @@
 
     public class HomeController : BaseController
     {
-        [HttpGet("/")]
-        public IHttpResponse RootIndex()
-        {
-            return this.Index();
-        }
-
-        [HttpGet("/home/index")]
+        [HttpGet]
         public IHttpResponse Index()
         {
             var user = this.DbContext.Users.FirstOrDefault(u => u.Username == this.User);
