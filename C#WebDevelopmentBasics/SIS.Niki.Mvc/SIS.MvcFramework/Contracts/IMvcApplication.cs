@@ -1,10 +1,10 @@
 ﻿namespace SIS.MvcFramework.Contracts
 {
-    using SIS.MvcFramework.Services.Contracts;
+    using Services.Contracts;
 
     public interface IMvcApplication
     {
-        void Configure();
+        MvcFrameworkSettings Configure();
 
         void ConfigureServices(IServiceCollection collection);
     }
