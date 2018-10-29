@@ -22,23 +22,29 @@
                         <li class="nav-item">
                             <a class="nav-link nav-link-white active" href="/">Home</a>
                         </li>
-                        @if(User != null)
+                        @if(User.IsLoggedIn)
                         {
                             <li class="nav-item">
                                 <a class="nav-link nav-link-white active" href="/channels/followed">My Channels</a>
                             </li>
+                            @if(User.Role == "Admin")
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link nav-link-white active" href="/channels/create">Create Channel</a>
+                                </li>
+                            }
                             <li class="nav-item">
-                                <a class="nav-link nav-link-white active" href="/users/logout">Logout</a>
+                                <a class="nav-link nav-link-white active" href="/users/logout">Logout (@User.Info)</a>
                             </li>
                         }
                         @else
                         {
-                            <li class="nav-item">
-                                <a class="nav-link nav-link-white active" href="/users/login">Login</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link nav-link-white active" href="/users/register">Register</a>
-                            </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-white active" href="/users/login">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-white active" href="/users/register">Register</a>
+                        </li>
                         }
                     </ul>
                 </div>

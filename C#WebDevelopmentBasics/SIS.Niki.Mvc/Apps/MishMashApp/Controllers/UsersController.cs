@@ -91,7 +91,13 @@
                 return this.BadRequestErrorWithView("Invalid username or password.");
             }
 
-            var cookieContent = this.UserCookieService.GetUserCookie(user.Username);
+            var mvcUser = new MvcUserInfo
+            {
+                Username = user.Username,
+                Role = user.Role.ToString(),
+                Info = user.Email,
+            };
+            var cookieContent = this.UserCookieService.GetUserCookie(mvcUser);
             var cookie = new HttpCookie(".auth", cookieContent, 7);
             this.Response.Cookies.Add(cookie);
 
@@ -106,7 +112,7 @@
             }
 
             var cookie = this.Request.Cookies.GetCookie(".auth");
-            cookie.Expire();;
+            cookie.Expire(); ;
             this.Response.Cookies.Add(cookie);
             return this.Redirect("/");
         }

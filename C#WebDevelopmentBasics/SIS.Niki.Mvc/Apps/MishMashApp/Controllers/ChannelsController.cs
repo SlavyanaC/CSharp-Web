@@ -13,10 +13,10 @@
         [Authorize]
         public IHttpResponse Followed()
         {
-            var user = this.DbContext.Users.FirstOrDefault(u => u.Username == this.User);
+            var user = this.DbContext.Users.FirstOrDefault(u => u.Username == this.User.Username);
 
             var followedChannels = this.DbContext.Channels
-                .Where(c => c.Followers.Any(f => f.User.Username == this.User))
+                .Where(c => c.Followers.Any(f => f.User.Username == this.User.Username))
                 .Select(c => new ChannelViewModel()
                 {
                     Id = c.Id,
@@ -25,14 +25,13 @@
                     FollowersCount = c.Followers.Count(),
                 }).ToArray();
 
-            return user.Role == UserRole.Admin ? this.View(followedChannels, "_LayoutAdmin")
-                : this.View(followedChannels);
+            return this.View(followedChannels);
         }
 
         [Authorize]
         public IHttpResponse Follow(int id)
         {
-            var user = this.DbContext.Users.FirstOrDefault(u => u.Username == this.User);
+            var user = this.DbContext.Users.FirstOrDefault(u => u.Username == this.User.Username);
           
             var channel = this.DbContext.Channels.FirstOrDefault(c => c.Id == id);
             if (channel == null)
@@ -62,7 +61,7 @@
         [Authorize]
         public IHttpResponse Unfollow(int id)
         {
-           var userChannel = this.DbContext.UserChannels.FirstOrDefault(uc => uc.User.Username == this.User && uc.ChannelId == id);
+           var userChannel = this.DbContext.UserChannels.FirstOrDefault(uc => uc.User.Username == this.User.Username && uc.ChannelId == id);
             if (userChannel == null)
             {
                 return this.BadRequestErrorWithView("You are not following this channel.");
@@ -77,7 +76,7 @@
         [Authorize]
         public IHttpResponse Details(int id)
         {
-            var user = this.DbContext.Users.FirstOrDefault(u => u.Username == this.User);
+            var user = this.DbContext.Users.FirstOrDefault(u => u.Username == this.User.Username);
            
             var channelViewModel = this.DbContext.Channels.Where(c => c.Id == id)
                 .Select(c => new ChannelDetailsViewModel()
@@ -95,27 +94,26 @@
                 return this.BadRequestError("Invalid channel id.");
             }
 
-            return user.Role == UserRole.Admin ? this.View(channelViewModel, "_LayoutAdmin")
-                : this.View(channelViewModel);
+            return this.View(channelViewModel);
         }
 
         [Authorize]
         public IHttpResponse Create()
         {
-            var user = this.DbContext.Users.FirstOrDefault(u => u.Username == this.User);
+            var user = this.DbContext.Users.FirstOrDefault(u => u.Username == this.User.Username);
             if (user.Role != UserRole.Admin)
             {
                 return Redirect("/");
             }
 
-            return this.View(layoutName: "_LayoutAdmin");
+            return this.View();
         }
 
         [HttpPost]
         [Authorize]
         public IHttpResponse Create(CreateChannelViewModel model)
         {
-            var user = this.DbContext.Users.FirstOrDefault(u => u.Username == this.User);
+            var user = this.DbContext.Users.FirstOrDefault(u => u.Username == this.User.Username);
             if (user.Role != UserRole.Admin)
             {
                 return this.BadRequestErrorWithView("You have no permission to access this page.");

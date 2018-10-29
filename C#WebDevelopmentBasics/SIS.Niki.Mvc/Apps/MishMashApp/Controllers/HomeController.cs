@@ -11,7 +11,7 @@
     {
         public IHttpResponse Index()
         {
-            var user = this.DbContext.Users.FirstOrDefault(u => u.Username == this.User);
+            var user = this.DbContext.Users.FirstOrDefault(u => u.Username == this.User.Username);
             if (user != null)
             {
                 var loggedInUserHomeViewModel = GetLoggedInUserHomeViewModel(user);
@@ -65,11 +65,11 @@
 
             var loggedInUserHomeViewModel = new LoggedInUserHomeViewModel
             {
-                Role = user.Role,
                 FollowedChannels = followedChannels,
                 SuggestedChannels = suggestedChannels,
                 SeeOtherChannelViewModels = seeOtherChannels,
             };
+
             return loggedInUserHomeViewModel;
         }
     }
