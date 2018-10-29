@@ -4,7 +4,6 @@
     using SIS.HTTP.Responses.Contracts;
     using ViewModels.Channel;
     using Models;
-    using Models.Enums;
     using ViewModels.Home;
 
     public class HomeController : BaseController
@@ -15,8 +14,7 @@
             if (user != null)
             {
                 var loggedInUserHomeViewModel = GetLoggedInUserHomeViewModel(user);
-                return user.Role == UserRole.Admin ? this.View("UserHomeIndex", loggedInUserHomeViewModel, "_LayoutAdmin")
-                    : this.View("UserHomeIndex", loggedInUserHomeViewModel);
+                return this.View("UserHomeIndex", loggedInUserHomeViewModel);
             }
 
             return this.View();
