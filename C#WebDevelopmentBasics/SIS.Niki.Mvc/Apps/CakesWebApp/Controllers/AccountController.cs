@@ -71,8 +71,6 @@ namespace CakesWebApp.Controllers
                 return this.ServerError(e.Message);
             }
 
-            // TODO: Login
-
             return this.Redirect("/");
         }
 

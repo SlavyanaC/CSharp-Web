@@ -27,7 +27,6 @@
         [HttpPost("/cakes/add")]
         public IHttpResponse DoAddCakes(DoAddCakeViewModel model)
         {
-            // TODO: Validation
             var product = model.To<Product>();
             //var product = new Product
             //{
