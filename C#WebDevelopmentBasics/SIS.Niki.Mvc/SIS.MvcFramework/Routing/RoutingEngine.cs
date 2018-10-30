@@ -34,7 +34,7 @@
             foreach (var file in files)
             {
                 var url = file.Replace("\\", "/").Replace(settings.WwwrootPath, string.Empty);
-                routingTable.Routes[HttpRequestMethod.GET][url] = (request) =>
+                routingTable.Add(HttpRequestMethod.GET, url, (request) =>
                 {
                     var content = File.ReadAllText(file);
                     var contentType = "text/plain";
@@ -66,7 +66,7 @@
 
                     var result = new TextResult(content, HttpResponseStatusCode.Ok, contentType);
                     return result;
-                };
+                });
 
                 Console.WriteLine($"Content registered: {file} => {HttpRequestMethod.GET} => {url}");
             }
@@ -74,11 +74,11 @@
 
         private static void RegisterDefaultRoute(ServerRoutingTable routingTable)
         {
-            if (!routingTable.Routes[HttpRequestMethod.GET].ContainsKey("/")
-                && routingTable.Routes[HttpRequestMethod.GET].ContainsKey("/home/index"))
+            if (!routingTable.Contains(HttpRequestMethod.GET, "/")
+                && routingTable.Contains(HttpRequestMethod.GET, "/home/index"))
             {
-                routingTable.Routes[HttpRequestMethod.GET]["/"] = (request) =>
-                    routingTable.Routes[HttpRequestMethod.GET]["/home/index"](request);
+                routingTable.Add(HttpRequestMethod.GET, "/", (request) =>
+                    routingTable.Get(HttpRequestMethod.GET, "/home/index")(request));
 
                 Console.WriteLine($"Route registered: reuse /home/index => {HttpRequestMethod.GET} => /");
             }
