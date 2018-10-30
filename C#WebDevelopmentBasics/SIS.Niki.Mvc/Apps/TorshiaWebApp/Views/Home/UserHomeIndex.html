@@ -14,13 +14,13 @@
         { var index = 0; }
         @foreach(var task in Model.Tasks)
         {
-            { @index += 1; }
-            @if(index % 6 == 0)
+            @if(index % 5 == 0)
             {
                 </div>
                 <br/>
                 <div class="tasks-row row">
             }
+            { @index += 1; }
             <div class="task col mx-3 bg-torshia rounded py-3">
                 <h6 class="task-title text-white text-center my-3">@task.Title</h6>
                 <hr class="bg-white hr-2 w-75">

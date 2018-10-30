@@ -6,67 +6,122 @@
 {
     <h1 class="text-center text-mishmash">Welcome, User-@User.Username!</h1>
 }
-
 <h2 class="text-mishmash">Your channels</h2>
 <hr class="bg-mishmash hr-2" />
-
-<div class="card-deck">
-    @foreach(var channel in Model.FollowedChannels)
-    {
-    <div class="card text-white bg-mishmash mb-3 text-center" style="min-width: 17rem; max-width: 17rem;">
-        <div class="card-body">
-            <p>@channel.Name</p>
-            <hr class="hr-2 w-75" style="background-color: white" />
-            <p>@channel.Type</p>
-            <hr class="hr-2 w-75" style="background-color: white" />
-            <p>@channel.FollowersCount Followers</p>
-            <hr class="hr-2 w-75" style="background-color: white" />
-            <row>Followed</row>
-        </div>
+<div class="tasks-holder">
+    <div class="tasks-row row">
+        { var index = 0; }
+        @foreach(var channel in Model.FollowedChannels)
+        {
+            @if(index % 5 == 0 && index != 0)
+            {
+                </div>
+                <br/>
+                <div class="tasks-row row">
+            }
+            { @index += 1; }
+            <div class="task col mx-3 bg-mishmash rounded py-3">
+                <h6 class="task-title text-white text-center my-3">@channel.Name</h6>
+                <hr class="bg-white hr-2 w-75">
+                <h6 class="task-title text-white text-center my-4">@channel.Type</h6>
+                <hr class="bg-white hr-2 w-75">
+                <h6 class="task-title text-white text-center my-4">@channel.FollowersCount Followers</h6>
+                <hr class="bg-white hr-2 w-75">
+                <h6 class="task-title text-white text-center my-4">Followed</h6>
+            </div>
+            @if(index == Model.FollowedChannels.ToArray().Length)
+            {
+                { var channelsNeeded = 5 - index % 5; }
+                @if(channelsNeeded != 5)
+                {
+                    @for(var i = 0; i < channelsNeeded; i++)
+                    {
+                        <div class="task col mx-3 bg-white rounded py-3"></div>
+                    }
+                }
+            }
+        }
     </div>
-    }
 </div>
 <h2 class="text-mishmash">Suggested</h2>
 <hr class="bg-mishmash hr-2" />
-<div class="card-deck">
-    @foreach(var channel in Model.SuggestedChannels)
-    {
-    <div class="card text-white bg-mishmash mb-3 text-center" style="min-width: 17rem; max-width: 17rem;">
-        <div class="card-body">
-            <p>@channel.Name</p>
-            <hr class="hr-2 w-75" style="background-color: white" />
-            <p>@channel.Type</p>
-            <hr class="hr-2 w-75" style="background-color: white" />
-            <p>@channel.FollowersCount Followers</p>
-            <hr class="hr-2 w-75" style="background-color: white" />
-            <row>
-                <a href="/channels/follow?id=@channel.Id" class="text-white">Follow</a>&nbsp;&nbsp;&nbsp;
-                <a href="/channels/details?id=@channel.Id" class="text-white">Details</a>
-            </row>
-        </div>
+<div class="tasks-holder">
+    <div class="tasks-row row">
+        { var indexSuggested = 0; }
+        @foreach(var channel in Model.SuggestedChannels)
+        {
+            @if(indexSuggested % 5 == 0)
+            {
+                </div>
+                <br/>
+                <div class="tasks-row row">
+            }
+            { @indexSuggested += 1; }
+            <div class="task col mx-3 bg-mishmash rounded py-3">
+                <h6 class="task-title text-white text-center my-3">@channel.Name</h6>
+                <hr class="bg-white hr-2 w-75">
+                <h6 class="task-title text-white text-center my-4">@channel.Type</h6>
+                <hr class="bg-white hr-2 w-75">
+                <h6 class="task-title text-white text-center my-4">@channel.FollowersCount Followers</h6>
+                <hr class="bg-white hr-2 w-75">
+                <div class="text-center">
+                    <a href="/channels/follow?id=@channel.Id" class="text-white">Follow</a>&nbsp;&nbsp;&nbsp;
+                    <a href="/channels/details?id=@channel.Id" class="text-white">Details</a>
+                </div>
+            </div>
+            @if(indexSuggested == Model.SuggestedChannels.ToArray().Length)
+            {
+                { var channelsNeeded = 5 - indexSuggested % 5; }
+                @if(channelsNeeded != 5)
+                {
+                    @for(var i = 0; i < channelsNeeded; i++)
+                    {
+                        <div class="task col mx-3 bg-white rounded py-3"></div>
+                    }
+                }
+            }
+        }
     </div>
-    }
 </div>
 <h2 class="text-mishmash">See Other</h2>
 <hr class="bg-mishmash hr-2" />
-<div class="card-deck">
-    @foreach(var channel in Model.SeeOtherChannelViewModels)
-    {
-    <div class="card text-white bg-mishmash mb-3 text-center" style="min-width: 17rem; max-width: 17rem;">
-        <div class="card-body">
-            <p>@channel.Name</p>
-            <hr class="hr-2 w-75" style="background-color: white" />
-            <p>@channel.Type</p>
-            <hr class="hr-2 w-75" style="background-color: white" />
-            <p>@channel.FollowersCount Followers</p>
-            <hr class="hr-2 w-75" style="background-color: white" />
-            <row>
-                <a href="/channels/follow?id=@channel.Id" class="text-white">Follow</a>&nbsp;&nbsp;&nbsp;
-                <a href="/channels/details?id=@channel.Id" class="text-white">Details</a>
-            </row>
-        </div>
+<div class="tasks-holder">
+    <div class="tasks-row row">
+        { var indexOther = 0; }
+        @foreach(var channel in Model.SeeOtherChannelViewModels)
+        {
+            @if(indexOther % 5 == 0)
+            {
+                </div>
+                <br/>
+                <div class="tasks-row row">
+            }
+            { @indexOther += 1; }
+            <div class="task col mx-3 bg-mishmash rounded py-3">
+                <h6 class="task-title text-white text-center my-3">@channel.Name</h6>
+                <hr class="bg-white hr-2 w-75">
+                <h6 class="task-title text-white text-center my-4">@channel.Type</h6>
+                <hr class="bg-white hr-2 w-75">
+                <h6 class="task-title text-white text-center my-4">@channel.FollowersCount Followers</h6>
+                <hr class="bg-white hr-2 w-75">
+                <div class="text-center">
+                    <a href="/channels/follow?id=@channel.Id" class="text-white">Follow</a>&nbsp;&nbsp;&nbsp;
+                    <a href="/channels/details?id=@channel.Id" class="text-white">Details</a>
+                </div>
+            </div>
+            @if(indexOther == Model.SeeOtherChannelViewModels.ToArray().Length)
+            {
+                { var channelsNeeded = 5 - indexOther % 5; }
+                @if(channelsNeeded != 5)
+                {
+                    @for(var i = 0; i < channelsNeeded; i++)
+                    {
+                        <div class="task col mx-3 bg-white rounded py-3"></div>
+                    }
+                }
+            }
+        }
     </div>
-    }
 </div>
 <br />
 <br />
