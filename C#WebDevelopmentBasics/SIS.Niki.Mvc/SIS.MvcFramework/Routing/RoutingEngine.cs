@@ -1,7 +1,4 @@
-﻿using SIS.HTTP.Headers;
-using SIS.HTTP.Responses;
-
-namespace SIS.MvcFramework.Routing
+﻿namespace SIS.MvcFramework.Routing
 {
     using System;
     using System.Collections.Generic;
@@ -9,6 +6,8 @@ namespace SIS.MvcFramework.Routing
     using System.Linq;
     using System.Reflection;
     using HTTP.Enums;
+    using HTTP.Headers;
+    using HTTP.Responses;
     using HTTP.Requests.Contracts;
     using HTTP.Responses.Contracts;
     using WebServer.Results;
@@ -127,15 +126,17 @@ namespace SIS.MvcFramework.Routing
                         path = "/" + path;
                     }
 
-                    var hasAuthorizeAttribute = methodInfo.GetCustomAttributes(true).Any(ca => ca.GetType() == typeof(AuthorizeAttribute));
+                    var authorizeAttribute = methodInfo.GetCustomAttributes(true).FirstOrDefault(ca => ca.GetType() == typeof(AuthorizeAttribute)) as AuthorizeAttribute;
 
                     routingTable.Add(method, path,
                         (request) =>
                         {
-                            if (hasAuthorizeAttribute)
+                            if (authorizeAttribute != null)
                             {
                                 var userData = Controller.GetUserData(request.Cookies, userCookieService);
-                                if (userData == null)
+                                if (userData == null || 
+                                    !userData.IsLoggedIn ||
+                                    (authorizeAttribute.RoleName != null && authorizeAttribute.RoleName != userData.Role))
                                 {
                                     var response = new HttpResponse();
                                     response.Headers.Add(new HttpHeader(HttpHeader.Location, settings.LoginPageUrl));
@@ -143,8 +144,8 @@ namespace SIS.MvcFramework.Routing
                                     return response;
                                 }
                             }
-                          return ExecuteAction(controller, methodInfo, request, serviceCollection);
-                    });
+                            return ExecuteAction(controller, methodInfo, request, serviceCollection);
+                        });
 
                     Console.WriteLine($"Route registered: {controller.Name}.{methodInfo.Name} => {method} => {path}");
                 }

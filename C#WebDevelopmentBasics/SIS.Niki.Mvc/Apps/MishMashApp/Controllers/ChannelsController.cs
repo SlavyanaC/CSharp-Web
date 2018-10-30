@@ -97,28 +97,16 @@
             return this.View(channelViewModel);
         }
 
-        [Authorize]
+        [Authorize("Admin")]
         public IHttpResponse Create()
         {
-            var user = this.DbContext.Users.FirstOrDefault(u => u.Username == this.User.Username);
-            if (user.Role != UserRole.Admin)
-            {
-                return Redirect("/");
-            }
-
             return this.View();
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize("Admin")]
         public IHttpResponse Create(CreateChannelViewModel model)
         {
-            var user = this.DbContext.Users.FirstOrDefault(u => u.Username == this.User.Username);
-            if (user.Role != UserRole.Admin)
-            {
-                return this.BadRequestErrorWithView("You have no permission to access this page.");
-            }
-
             if (model.Name == null)
             {
                 return this.BadRequestErrorWithView("A channel must have name.");

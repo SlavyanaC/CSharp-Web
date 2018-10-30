@@ -4,20 +4,13 @@
     using System.Globalization;
     using SIS.HTTP.Responses.Contracts;
     using SIS.MvcFramework.Attributes;
-    using Models.Enums;
     using ViewModels.Report;
 
     public class ReportsController : BaseController
     {
-        [Authorize]
+        [Authorize("Admin")]
         public IHttpResponse All()
         {
-            var user = this.DbContext.Users.FirstOrDefault(u => u.Username == this.User.Username);
-            if (user.Role != Role.Admin)
-            {
-                return this.BadRequestError("You are not authorized to access this page.");
-            }
-
             var reports = this.DbContext.Reports.Select(r => new ReportViewModel
             {
                 Id = r.Id,
@@ -29,15 +22,9 @@
             return this.View(reports);
         }
 
-        [Authorize]
+        [Authorize("Admin")]
         public IHttpResponse Details(int id)
         {
-            var user = this.DbContext.Users.FirstOrDefault(u => u.Username == this.User.Username);
-            if (user.Role != Role.Admin)
-            {
-                return this.BadRequestError("You are not authorized to access this page.");
-            }
-
             var report = this.DbContext.Reports.FirstOrDefault(r => r.Id == id);
             if (report == null)
             {
@@ -61,7 +48,6 @@
             {
                 viewModel.DueDate = report.Task.DueDate.Value.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
             }
-
 
             return this.View(viewName: "ReportDetails", model: viewModel);
         }

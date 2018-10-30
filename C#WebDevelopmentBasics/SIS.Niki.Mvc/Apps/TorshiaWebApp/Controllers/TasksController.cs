@@ -38,28 +38,16 @@
             return this.View(viewName: "TaskDetails", model: taskDetailsViewModel);
         }
 
-        [Authorize]
+        [Authorize("Admin")]
         public IHttpResponse Create()
         {
-            var user = this.DbContext.Users.FirstOrDefault(u => u.Username == this.User.Username);
-            if (user.Role != Role.Admin)
-            {
-                return this.BadRequestError("You are not authorized to access this page.");
-            }
-
             return this.View();
         }
 
-        [Authorize]
         [HttpPost]
+        [Authorize("Admin")]
         public IHttpResponse Create(TaskCreateViewModel model)
         {
-            var user = this.DbContext.Users.FirstOrDefault(u => u.Username == this.User.Username);
-            if (user.Role != Role.Admin)
-            {
-                return this.BadRequestError("You are not authorized to access this page.");
-            }
-
             var task = new Task
             {
                 Title = model.Title,
