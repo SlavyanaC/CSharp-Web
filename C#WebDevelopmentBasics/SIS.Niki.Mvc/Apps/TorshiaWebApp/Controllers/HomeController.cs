@@ -1,10 +1,9 @@
-﻿using TorshiaWebApp.ViewModels.Home;
-using TorshiaWebApp.ViewModels.Task;
-
-namespace TorshiaWebApp.Controllers
+﻿namespace TorshiaWebApp.Controllers
 {
     using System.Linq;
     using SIS.HTTP.Responses.Contracts;
+    using ViewModels.Home;
+    using ViewModels.Task;
 
     public class HomeController : BaseController
     {
@@ -15,7 +14,7 @@ namespace TorshiaWebApp.Controllers
             {
                 var loggedInUserHomeViewModel = new LoggedInUserHomeViewModel
                 {
-                    Tasks = this.DbContext.Tasks.Select(t => new TaskViewModel()
+                    Tasks = this.DbContext.Tasks.Where(t => !t.IsReported).Select(t => new TaskViewModel()
                     {
                         Id = t.Id,
                         Title = t.Title,
