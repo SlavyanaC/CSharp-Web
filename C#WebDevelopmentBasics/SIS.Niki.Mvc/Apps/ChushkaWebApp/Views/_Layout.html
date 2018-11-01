@@ -24,22 +24,33 @@
                         </li>
                         @if(User.IsLoggedIn)
                         {
-                            </ul>
-                            <ul class="navbar-nav left-side">
-                                <li class="nav-item left-side">
-                                    <a class="nav-link nav-link-white" href="/users/logout">Logout</a>
+                            @if(User.Role == "Admin")
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link nav-link-white" href="/products/create">Create Proucts</a>
                                 </li>
-                            </ul>
-                        }
-                        @else
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link nav-link-white" href="/users/login">Login</a>
+                                <li class="nav-item">
+                                    <a class="nav-link nav-link-white" href="/orders/all">All Orders</a>
+                                </li>
+                                </ul>
+                                <ul>
+                            }
+                        </ul>
+                        <ul class="navbar-nav left-side">
+                            <li class="nav-item left-side">
+                                <a class="nav-link nav-link-white" href="/users/logout">Logout</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link nav-link-white" href="/users/register">Register</a>
-                            </li>
-                        }
+                        </ul>
+                    }
+                    @else
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-white" href="/users/login">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-white" href="/users/register">Register</a>
+                        </li>
+                    }
                     </ul>
                 </div>
             </nav>

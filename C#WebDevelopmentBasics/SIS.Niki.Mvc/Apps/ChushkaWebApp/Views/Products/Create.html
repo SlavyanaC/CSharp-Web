@@ -1,0 +1,44 @@
+﻿<h1 class="text-center">Create Product</h1>
+<hr class="bg-secondary half-width" />
+<form class="mx-auto half-width" method="post" action="/products/create">
+    <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" id="name" placeholder="Name..." name="name">
+    </div>
+    <div class="form-group">
+        <label for="price">Price</label>
+        <input type="number" class="form-control" id="price" placeholder="Price..." name="price">
+    </div>
+    <div class="form-group">
+        <label for="description">Description</label>
+        <textarea type="text" size="6" class="form-control" id="description" placeholder="Description ..." name="description"></textarea>
+    </div>
+    <h4 class="text-center">Product Type</h4>
+    <hr class="bg-secondary half-width" />
+    <div class="row justify-content-around">
+        <div class="col-md-2">
+            <tex name="type" id="Food" value="Food" type="radio" />
+            <label for="Food">Food</label>
+        </div>
+        <div class="col-md-2">
+            <input name="type" id="Domestic" value="Domestic" type="radio" />
+            <label for="Domestic">Domestic</label>
+        </div>
+        <div class="col-md-2">
+            <input name="type" id="Health" value="Health" type="radio" />
+            <label for="Health">Health</label>
+        </div>
+        <div class="col-md-2">
+            <input name="type" id="Cosmetic" value="Cosmetic" type="radio" />
+            <label for="Cosmetic">Cosmetic</label>
+        </div>
+        <div class="col-md-2">
+            <input name="type" id="Other" value="Other" type="radio" />
+            <label for="Other">Other</label>
+        </div>
+    </div>
+    <hr class="bg-mishmash w-50 hr-2" />
+    <div class="button-holder mt-4 d-flex justify-content-center">
+        <button type="submit" class="btn chushka-bg-color text-white">Create</button>
+    </div>
+</form>

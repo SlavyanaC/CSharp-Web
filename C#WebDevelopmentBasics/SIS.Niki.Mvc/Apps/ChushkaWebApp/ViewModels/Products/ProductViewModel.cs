@@ -2,24 +2,18 @@
 {
     public class ProductViewModel
     {
-        private string description;
-
         public int Id { get; set; }
 
         public string Name { get; set; }
 
-        public string Description
-        {
-            get => this.description;
-            set
-            {
-                if (value.Length > 50)
-                {
-                    value = value.Substring(0, 50) + "...";
-                }
+        public string Type { get; set; }
 
-                description = value;
-            }
+        public string Description { get; set; }
+
+        public string ShortDescription
+        {
+            get => this.Description.Length > 50 ? this.Description.Substring(0, 50) + "..." : this.Description;
+            set {; }
         }
 
         public decimal Price { get; set; }

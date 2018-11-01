@@ -1,0 +1,42 @@
+﻿<h1 class="text-center">Delete Product</h1>
+<hr class="bg-secondary half-width" />
+<form class="mx-auto half-width" method="post" action="/products/delete">
+    <input type="hidden" name="id" value="@Model.Id" />
+    <div class="form-group">
+        <label for="name">Name</label>
+        <input disabled="disabled" type="text" class="form-control" id="name" placeholder="Name..." name="name" value="@Model.Name">
+    </div>
+    <div class="form-group">
+        <label for="price">Price</label>
+        <input disabled="disabled" type="number" class="form-control" id="price" placeholder="Price..." name="price" value="@Model.Price">
+    </div>
+    <div class="form-group">
+        <label for="description">Description</label>
+        <textarea disabled="disabled" type="text" rows="6" class="form-control" id="description" placeholder="Description ..." name="description">@Model.Description"</textarea>
+    </div>
+    <h4 class="text-center">Product Type</h4>
+    <hr class="bg-secondary half-width"/>
+    <div class="row justify-content-around">
+        { var types = new[] { "Food", "Domestic", "Health", "Cosmetic", "Other" }; }
+        @foreach(var type in types)
+        {
+        <div class="col-md-2">
+            <input
+                disabled="disabled"
+                id="type@type"
+                type="radio"
+                @if (Model.Type== type)
+                {
+                checked="checked"
+                }
+                name="type"
+                value="@type"/>
+            <label for="type@type">@type</label>
+        </div>
+        }
+    </div>
+    <hr class="bg-secondary half-width"/>
+    <div class="button-holder mt-4 d-flex justify-content-center">
+        <button type="submit" class="btn chushka-bg-color text-white">Delete</button>
+    </div>
+</form>
