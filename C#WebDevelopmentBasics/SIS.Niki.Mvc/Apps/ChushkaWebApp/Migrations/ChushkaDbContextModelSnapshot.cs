@@ -85,7 +85,8 @@ namespace ChushkaWebApp.Migrations
 
                     b.HasOne("ChushkaWebApp.Models.Product", "Product")
                         .WithMany("Orders")
-                        .HasForeignKey("ProductId");
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 #pragma warning restore 612, 618
         }

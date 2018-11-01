@@ -15,5 +15,16 @@
         {
             optionsBuilder.UseSqlServer(Configuration.ConnectionString).UseLazyLoadingProxies();
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Product>
+            (
+                e => e.HasMany(p => p.Orders)
+                    .WithOne(o => o.Product)
+                    .HasForeignKey(o => o.ProductId)
+                    .OnDelete(DeleteBehavior.Restrict)
+            );
+        }
     }
 }

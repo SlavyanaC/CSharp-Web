@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ChushkaWebApp.Migrations
 {
     [DbContext(typeof(ChushkaDbContext))]
-    [Migration("20181101155030_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20181101212025_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -87,7 +87,8 @@ namespace ChushkaWebApp.Migrations
 
                     b.HasOne("ChushkaWebApp.Models.Product", "Product")
                         .WithMany("Orders")
-                        .HasForeignKey("ProductId");
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 #pragma warning restore 612, 618
         }
