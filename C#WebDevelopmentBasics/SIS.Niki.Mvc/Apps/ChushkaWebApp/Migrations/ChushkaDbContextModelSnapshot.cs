@@ -76,7 +76,7 @@ namespace ChushkaWebApp.Migrations
 
             modelBuilder.Entity("ChushkaWebApp.Models.Order", b =>
                 {
-                    b.HasOne("ChushkaWebApp.Models.User", "Client")
+                    b.HasOne("ChushkaWebApp.Models.User", "Customer")
                         .WithMany("Orders")
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade);

@@ -1,0 +1,27 @@
+﻿ <h1 class="text-center text-torshia">Task Reports</h1>
+<hr class="hr-2 bg-torshia"/>
+<table class="table w-75 mx-auto table-hover">
+    <thead>
+    <tr class="row">
+        <th class="col-md-1">#</th>
+        <th class="col-md-5">Order ID</th>
+        <th class="col-md-1">Customer</th>
+        <th class="col-md-2">Product</th>
+        <th class="col-md-2">Ordered On</th>
+    </tr>
+    </thead>
+    <tbody>
+    @for(var i = 0; i < Model.Length; i++)
+    {
+        { var order = Model[i]; }
+        { var index = i + 1;}
+        <tr class="row">
+            <th class="col-md-1">@index</th>
+            <td class="col-md-5">@order.Id</td>
+            <td class="col-md-1">@order.Customer</td>
+            <td class="col-md-2">@order.Product</td>
+            <td class="col-md-2">@order.OrderedOn</td>
+        </tr>
+    }
+    </tbody>
+</table>

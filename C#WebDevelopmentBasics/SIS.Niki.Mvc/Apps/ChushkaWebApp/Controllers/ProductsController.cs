@@ -24,6 +24,28 @@
             return this.View(productViewModel);
         }
 
+        [Authorize]
+        public IHttpResponse Order(int id)
+        {
+            var client = this.DbContext.Users.FirstOrDefault(c => c.Username == this.User.Username);
+            var product = this.DbContext.Products.FirstOrDefault(p => p.Id == id);
+            if (product == null)
+            {
+                return this.BadRequestError($"Product with id {id} not found.");
+            }
+
+            var order = new Order()
+            {
+                ClientId = client.Id,
+                ProductId = product.Id,
+                OrderedOn = DateTime.UtcNow,
+            };
+            this.DbContext.Orders.Add(order);
+            this.DbContext.SaveChanges();
+
+            return this.Redirect("/");
+        }
+
         [Authorize("Admin")]
         public IHttpResponse Create()
         {
