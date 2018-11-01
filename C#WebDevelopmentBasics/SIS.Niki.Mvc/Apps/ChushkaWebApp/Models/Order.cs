@@ -4,11 +4,13 @@
 
     public class Order
     {
-        public int ProductId { get; set; }
+        public string Id { get; set; }
+
+        public string ProductId { get; set; }
 
         public virtual Product Product { get; set; }
 
-        public int ClientId { get; set; }
+        public string ClientId { get; set; }
 
         public virtual User Client { get; set; }
 

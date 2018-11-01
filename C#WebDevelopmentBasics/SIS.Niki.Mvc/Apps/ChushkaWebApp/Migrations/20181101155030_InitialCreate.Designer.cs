@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ChushkaWebApp.Migrations
 {
     [DbContext(typeof(ChushkaDbContext))]
-    [Migration("20181101085220_InitialCreate")]
+    [Migration("20181101155030_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,24 +23,28 @@ namespace ChushkaWebApp.Migrations
 
             modelBuilder.Entity("ChushkaWebApp.Models.Order", b =>
                 {
-                    b.Property<int>("ProductId");
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<int>("ClientId");
+                    b.Property<string>("ClientId");
 
                     b.Property<DateTime>("OrderedOn");
 
-                    b.HasKey("ProductId", "ClientId");
+                    b.Property<string>("ProductId");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("ClientId");
+
+                    b.HasIndex("ProductId");
 
                     b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("ChushkaWebApp.Models.Product", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("Description");
 
@@ -57,9 +61,8 @@ namespace ChushkaWebApp.Migrations
 
             modelBuilder.Entity("ChushkaWebApp.Models.User", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("Email");
 
@@ -78,15 +81,13 @@ namespace ChushkaWebApp.Migrations
 
             modelBuilder.Entity("ChushkaWebApp.Models.Order", b =>
                 {
-                    b.HasOne("ChushkaWebApp.Models.User", "Customer")
+                    b.HasOne("ChushkaWebApp.Models.User", "Client")
                         .WithMany("Orders")
-                        .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ClientId");
 
                     b.HasOne("ChushkaWebApp.Models.Product", "Product")
                         .WithMany("Orders")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ProductId");
                 });
 #pragma warning restore 612, 618
         }

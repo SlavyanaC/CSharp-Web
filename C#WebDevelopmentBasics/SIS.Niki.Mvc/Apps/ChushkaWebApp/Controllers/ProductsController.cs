@@ -12,7 +12,7 @@
     public class ProductsController : BaseController
     {
         [Authorize]
-        public IHttpResponse Details(int id)
+        public IHttpResponse Details(string id)
         {
             var product = this.DbContext.Products.FirstOrDefault(p => p.Id == id);
             if (product == null)
@@ -25,7 +25,7 @@
         }
 
         [Authorize]
-        public IHttpResponse Order(int id)
+        public IHttpResponse Order(string id)
         {
             var client = this.DbContext.Users.FirstOrDefault(c => c.Username == this.User.Username);
             var product = this.DbContext.Products.FirstOrDefault(p => p.Id == id);
@@ -60,8 +60,9 @@
             {
                 return this.BadRequestErrorWithView("All fields ar required.");
             }
-
+            model.Id = string.Empty;
             var product = model.To<Product>();
+            product.Id = null;
             product.Type = Enum.Parse<ProductType>(model.Type);
             this.DbContext.Products.Add(product);
             try
@@ -77,7 +78,7 @@
         }
 
         [Authorize("Admin")]
-        public IHttpResponse Edit(int id)
+        public IHttpResponse Edit(string id)
         {
             var product = this.DbContext.Products.FirstOrDefault(p => p.Id == id);
             if (product == null)
@@ -124,7 +125,7 @@
         }
 
         [Authorize("Admin")]
-        public IHttpResponse Delete(int id)
+        public IHttpResponse Delete(string id)
         {
             var product = this.DbContext.Products.FirstOrDefault(p => p.Id == id);
             if (product == null)

@@ -10,9 +10,9 @@
         [Authorize("Admin")]
         public IHttpResponse All()
         {
-            var viewModel = this.DbContext.Orders.Select(o => new OrderViewModel
+            var viewModel = this.DbContext.Orders.OrderBy(o => o.OrderedOn).Select(o => new OrderViewModel
             {
-                Id = o.ClientId.ToString() + o.ProductId.ToString(),
+                Id = o.Id,
                 Customer = o.Client.Username,
                 Product = o.Product.Name,
                 OrderedOn = o.OrderedOn.ToString("hh:mm dd/MM/yyyy"),

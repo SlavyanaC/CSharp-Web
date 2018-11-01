@@ -15,10 +15,5 @@
         {
             optionsBuilder.UseSqlServer(Configuration.ConnectionString).UseLazyLoadingProxies();
         }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Order>(e => e.HasKey(k => new { k.ProductId, k.ClientId }));
-        }
     }
 }
