@@ -31,6 +31,11 @@
             var path = settings.WwwrootPath;
             var files = Directory.GetFiles(path, "*", SearchOption.AllDirectories);
 
+            if (!Directory.Exists(path))
+            {
+                return;
+            }
+
             foreach (var file in files)
             {
                 var url = file.Replace("\\", "/").Replace(settings.WwwrootPath, string.Empty);
@@ -134,7 +139,7 @@
                             if (authorizeAttribute != null)
                             {
                                 var userData = Controller.GetUserData(request.Cookies, userCookieService);
-                                if (userData == null || 
+                                if (userData == null ||
                                     !userData.IsLoggedIn ||
                                     (authorizeAttribute.RoleName != null && authorizeAttribute.RoleName != userData.Role))
                                 {
