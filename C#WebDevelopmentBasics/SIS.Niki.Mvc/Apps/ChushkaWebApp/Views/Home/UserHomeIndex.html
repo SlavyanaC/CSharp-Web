@@ -1,0 +1,39 @@
+﻿<div class="container-fluid text-center">
+    @if(User.Role == "User")
+    {
+        <h2>Greetings, @User.Username!</h2>
+        <h4>Feel free to view and order any of our products.</h4>
+    }
+    @else
+    {
+        <h2>Greetings, admin!</h2>
+        <h4>Enjoy your work today!</h4>
+    }
+</div>
+<hr class="hr-2 bg-dark" />
+<div class="container-fluid product-holder">
+    <div class="row d-flex justify-content-around">
+        { var index = 0; }
+        @foreach(var product in Model)
+        {
+            @if(index % 5 == 0)
+            {
+                </div>
+                <br/>
+                <div class="row d-flex justify-content-around">
+            }
+            { @index += 1; }
+            <a href="/products/details?id=@product.Id" class="col-md-2">                    
+                <div class="product p-1 chushka-bg-color rounded-top rounded-bottom">
+                    <h5 class="text-center mt-3">@product.Name</h5>
+                    <hr class="hr-1 bg-white"/>
+                    <p class="text-white text-center">
+                        @product.Description
+                    </p>
+                    <hr class="hr-1 bg-white"/>
+                    <h6 class="text-center text-white mb-3">@product.Price</h6>
+                </div>
+            </a>
+        }
+       </div>
+</div>      
