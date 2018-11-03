@@ -1,0 +1,17 @@
+﻿<h1>All Cats</h1>
+<hr class="my-5" />
+<div class="container-fluid">
+    <div class="row justify-content-around mb-3">
+        @foreach(var kitten in Model)
+        {
+            { var breed = kitten.Breed.ToString().Replace("_", " "); }
+            { var breedPath = kitten.Breed.ToString().Replace("_", "-").ToLower() + ".jpg"; }
+            <div class="col-md-3 p-1 text-center">
+                <img src="/@breedPath" class="card-img" alt="kitten" height="250" width="250">
+                <div class="text-center">Name: @kitten.Name</div>
+                <div class="text-center">Age: @kitten.Age</div>
+                <div class="text-center">Breed: @breed</div>
+            </div>
+        }
+    </div>
+</div>

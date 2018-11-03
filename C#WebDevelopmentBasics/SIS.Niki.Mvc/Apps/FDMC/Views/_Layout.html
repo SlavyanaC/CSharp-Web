@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FDMC</title>
+    <link rel="stylesheet" type="text/css" href="/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/bootstrap.min.js">
+</head>
+<body>
+    <div class="container-fluid">
+        <nav class="navbar navbar-toggleable-md navbar-light bg-faded">
+            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <a class="navbar-brand" href="/">FDMC</a>
+            <div class="collapse navbar-collapse justify-content-end row" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active col-md-3">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    @if(User.IsLoggedIn)
+                    {
+                        <li class="nav-item active col-md-3">
+                            <a class="nav-link" href="/kittens/all">All&nbsp;Kittens</a>
+                        </li>
+                        <li class="nav-item active col-md-3">
+                            <a class="nav-link" href="/kittens/add">Add&nbsp;Kitten</a>
+                        </li>
+                        <li class="nav-item active col-md-2">
+                            <a class="nav-link" href="/users/logout">Logout</a>
+                        </li>
+                    }
+                    @else
+                    {
+                        <li class="nav-item active col-md-4">
+                            <a class="nav-link" href="/users/login">Login</a>
+                        </li>
+                        <li class="nav-item active col-md-4">
+                            <a class="nav-link" href="/users/register">Register</a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </nav>
+        <hr class="my-5" />
+        <main>
+            @RenderBody()
+        </main>
+        <hr class="my-5" />
+        <footer class="footer">
+            <div class="container-fluid">
+                <div class="text-muted container-fluid text-center">&copy; CopyRight Sanity Web Design Studios 2018. All rights reserved.</div>
+            </div>
+        </footer>
+        <script src="/bootstrap.min.js"></script>
+    </div>
+</body>
+</html>
