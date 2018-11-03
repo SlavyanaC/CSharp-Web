@@ -41,7 +41,7 @@
                 var url = file.Replace("\\", "/").Replace(settings.WwwrootPath, string.Empty);
                 routingTable.Add(HttpRequestMethod.GET, url, (request) =>
                 {
-                    var content = File.ReadAllText(file);
+                    var content = File.ReadAllBytes(file);
                     var contentType = "text/plain";
 
                     if (file.EndsWith(".css"))
