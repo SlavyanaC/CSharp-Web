@@ -1,0 +1,30 @@
+﻿<hr class="my-3" />
+<div class="container-fluid text-center text-info">
+    <h2>Welcome, @User.Username!</h2>
+</div>
+<hr class="my-3" />
+<div class="container-fluid product-holder w-75">
+    <div class="row d-flex justify-content-around">
+        { var index = 0; }
+        @foreach(var tube in Model.ToArray())
+        {
+        @if(index % 3 == 0 && index != 0)
+        {
+    </div>
+    <br />
+    <div class="row d-flex justify-content-around">
+        }
+        { @index += 1; }
+        <div class="product col-md-3">
+            <div class="embed-responsive embed-responsive-16by9">
+                <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/@tube.YouTubeId" allowfullscreen></iframe>
+            </div>
+            <a href="/tubes/details?id=@tube.Id">
+                <h4 class="text-center">@tube.Title</h4>
+                <h5 class="text-center"><i>@tube.Author</i></h5>
+                <hr class="my-3" />
+            </a>
+        </div>
+        }
+    </div>
+</div>

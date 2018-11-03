@@ -1,0 +1,30 @@
+﻿<h1 class="text-center text-info">@User.Username</h1>
+<h1 class="text-center text-info">(@User.Info)</h1>
+<hr class="hr-2" />
+<div class="container-fluid">
+    <table class="table hr-2 mx-auto table-hover">
+        <thead>
+            <tr class="row">
+                <th class="col-md-1">#</th>
+                <th class="col-md-6">Title</th>
+                <th class="col-md-3">Author</th>
+                <th class="col-md-2">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for(var i = 0; i < Model.Length; i++)
+            {
+            { var tube = Model[i]; }
+            { var index = i + 1; }
+            <tr class="row">
+                <th class="col-md-1">@index</th>
+                <td class="col-md-6">@tube.Title</td>
+                <td class="col-md-3">@tube.Author</td>
+                <td class="col-md-2">
+                    <a href="/tubes/details?id=@tube.Id">Details</a>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
