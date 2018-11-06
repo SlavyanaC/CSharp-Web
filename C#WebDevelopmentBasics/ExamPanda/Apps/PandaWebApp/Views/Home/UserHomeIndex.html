@@ -1,0 +1,47 @@
+﻿@if(User.Role == "Admin")
+{
+    <h1 class="text-center text-panda">Hello, Administrator @User.Username!</h1>
+}
+@else
+{
+    <h1 class="text-center text-panda">Hello, @User.Username!</h1>
+}
+<hr class="bg-panda hr-2" />
+<div class="card-columns d-flex justify-content-between">
+    <div class="card border-0 col-md-3">
+        <h2 class="card-title text-panda text-center">Pending</h2>
+            <div class="card-body border-panda">
+                @foreach(var pending in Model.Pending)
+                {
+                    <h5 class="row justify-content-between">
+                        @pending.Description
+                        <a href="/packages/details?id=@pending.Id" class="btn bg-panda text-white">Details</a>
+                    </h5>
+                }
+        </div>
+    </div>
+    <div class="card border-0 col-md-3">
+        <h2 class="card-title text-panda text-center">Shipped</h2>
+            <div class="card-body border-panda">
+                @foreach(var shipped in Model.Shipped)
+                {
+                    <h5 class="row justify-content-between">
+                        @shipped.Description
+                        <a href="/packages/details?id=@shipped.Id" class="btn bg-panda text-white">Details</a>
+                    </h5>
+                }
+        </div>
+    </div>
+    <div class="card border-0 col-md-3">
+        <h2 class="card-title text-panda text-center">Delivered</h2>
+            <div class="card-body border-panda">
+                @foreach(var delivered in Model.Delivered)
+                {
+                <h5 class="row justify-content-between">
+                    @delivered.Description
+                    <a href="/packages/acquire?id=@delivered.Id" class="btn bg-panda text-white">Acquire</a>
+                </h5>
+                }
+        </div>
+    </div>
+</div>
