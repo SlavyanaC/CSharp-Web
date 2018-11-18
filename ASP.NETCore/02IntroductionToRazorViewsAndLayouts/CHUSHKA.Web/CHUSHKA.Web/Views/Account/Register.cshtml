@@ -1,0 +1,32 @@
+﻿@{
+    ViewData["Title"] = "Register";
+}
+@model CHUSHKA.Web.Models.Account.RegisterViewModel
+
+<h1 class="text-center">Register</h1>
+<hr class="bg-secondary half-width" />
+<form asp-controller="Account" asp-action="Register" method="post" class="mx-auto half-width">
+   <div class="form-group">
+        <label asp-for="Username">Username</label>
+        <input asp-for="Username" class="form-control" placeholder="Username...">
+    </div>
+    <div class="form-group">
+        <label asp-for="Password">Password</label>
+        <input asp-for="Password" class="form-control" placeholder="Password...">
+    </div>
+    <div class="form-group">
+        <label asp-for="ConfirmPassword">Confirm Password</label>
+        <input asp-for="ConfirmPassword" class="form-control" placeholder="Confirm Password...">
+    </div>
+    <div class="form-group">
+        <label asp-for="FullName">Full name</label>
+        <input asp-for="FullName" class="form-control" placeholder="Full Name...">
+    </div>
+    <div class="form-group">
+        <label asp-for="Email">Email</label>
+        <input asp-for="Email" class="form-control" placeholder="Email...">
+    </div>
+    <div class="button-holder d-flex justify-content-center">
+        <button type="submit" class="btn chushka-bg-color">Register</button>
+    </div>
+</form>

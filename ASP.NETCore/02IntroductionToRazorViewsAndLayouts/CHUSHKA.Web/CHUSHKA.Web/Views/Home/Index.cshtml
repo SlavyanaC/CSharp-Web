@@ -1,0 +1,50 @@
+﻿@model ICollection<CHUSHKA.Web.ViewModels.Products.ProductInfoViewModel>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+@if (User.Identity.IsAuthenticated)
+{
+    <div class="container-fluid text-center">
+        @if (User.IsInRole("Admin"))
+        {
+            <h2>Greetings, admin!</h2>
+            <h4>Enjoy your work today!</h4>
+        }
+        else
+        {
+            <h2>Greetings, @User.Identity.Name!</h2>
+            <h4>Feel free to view and order any of our products.</h4>
+        }
+        <hr class="hr-2 bg-dark" />
+        <div class="container-fluid product-holder">
+            <div class="row d-flex justify-content-around mt-3">
+                @foreach (var item in Model.Select((value, i) => new { i, value }))
+                {
+                    var product = item.value;
+                    var index = item.i;
+                    if (index % 5 == 0 && index != 0)
+                    {
+                        @Html.Raw(@"</div><div class=""row d-flex justify-content-around mt-3"">")
+                        ;
+                    }
+                    <partial name="~/Views/Shared/_ProductsPartial.cshtml" model="product" />
+                }
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="jumbotron mt-3 chushka-bg-color">
+        <h1>Welcome to Chushka Universal Web Shop</h1>
+        <hr class="bg-white" />
+        <h3>
+            <a asp-controller="Account" asp-action="Login" class="nav-link-dark">Login</a> if you have an account.
+        </h3>
+        <h3>
+            @Html.ActionLink("Register", "Register", "Account", null, new { @class = "nav-link-dark" }) if you don't.
+        </h3>
+        @*<h3><a asp-controller="Account" asp-action="Register" class="nav-link-dark">Register</a> if you don't.</h3>*@
+    </div>
+}
