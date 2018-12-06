@@ -1,4 +1,4 @@
-﻿namespace PandaWebApp.ViewModels.Packages
+﻿namespace PandaWebApp.ViewModels.Package
 {
     public class PackageDetailsViewModel
     {

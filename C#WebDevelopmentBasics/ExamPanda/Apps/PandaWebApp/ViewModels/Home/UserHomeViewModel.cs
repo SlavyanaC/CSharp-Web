@@ -1,7 +1,7 @@
 ﻿namespace PandaWebApp.ViewModels.Home
 {
     using System.Collections.Generic;
-    using Packages;
+    using Package;
 
     public class UserHomeViewModel
     {

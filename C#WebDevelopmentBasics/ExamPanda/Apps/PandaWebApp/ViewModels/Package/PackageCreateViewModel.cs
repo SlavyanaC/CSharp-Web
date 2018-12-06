@@ -1,10 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace PandaWebApp.ViewModels.Packages
+﻿namespace PandaWebApp.ViewModels.Package
 {
-    class PackageCreateViewModel
+    public class PackageCreateViewModel
     {
+        public string Description { get; set; }
+
+        public double Weight { get; set; }
+
+        public string Address { get; set; }
+
+        public string Recipient { get; set; }
     }
 }

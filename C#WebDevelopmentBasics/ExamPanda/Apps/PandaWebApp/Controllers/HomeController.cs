@@ -4,7 +4,7 @@
     using SIS.HTTP.Responses;
     using Models.Enums;
     using ViewModels.Home;
-    using ViewModels.Packages;
+    using ViewModels.Package;
 
     public class HomeController : BaseController
     {

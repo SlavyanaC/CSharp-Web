@@ -7,7 +7,7 @@
     using SIS.MvcFramework;
     using Models;
     using Models.Enums;
-    using ViewModels.Packages;
+    using ViewModels.Package;
 
     public class PackagesController : BaseController
     {
