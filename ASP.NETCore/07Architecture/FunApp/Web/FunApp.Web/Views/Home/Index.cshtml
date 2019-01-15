@@ -1,4 +1,4 @@
-﻿@model FunApp.Web.ViewModels.Home.IndexViewModel
+﻿@model FunApp.Services.Models.Home.IndexViewModel
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -9,6 +9,7 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     @joke.Content
+                    <a class="btn btn-default btn-sm" asp-controller="Jokes" asp-action="Details" asp-route-id="@joke.Id">View</a>
                 </div>
                 <div class="panel-footer">@joke.CategoryName</div>
             </div>

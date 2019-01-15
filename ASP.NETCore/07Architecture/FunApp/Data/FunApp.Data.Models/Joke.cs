@@ -1,7 +1,7 @@
-﻿using FunApp.Data.Common;
-
-namespace FunApp.Data.Models
+﻿namespace FunApp.Data.Models
 {
+    using FunApp.Data.Common;
+
     public class Joke : BaseModel<int>
     {
         public string Content { get; set; }
